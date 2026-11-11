@@ -37,6 +37,7 @@ A spot-check of figures shown on the map against the original documents (PDF tex
 | Reclaimed water about 264,000 AF/yr (2022) | Arizona Republic (the article does not name who produced the figure) |
 | Gila River Indian Community 653,500 AF/yr; Tohono O'odham 66,000 AF/yr | Confirmed via search summaries of the Justice Department page and a UA explainer, not read in full |
 | "As much as 70 percent of residential water use is outdoors" | ADWR |
+| Data centers: 385 million gallons a year for cooling in the Phoenix area today (about 1,180 AF); projected direct and indirect use of 11,000 and 44,500 AF a year; Phoenix-area farms about 580,000 AF | Phoenix New Times, reporting the Ceres study and the Kyl Center's response. The roughly 10,000 AF "with electricity" figure for today comes from the research notes (3.3 billion gallons) and was not re-read in the article. |
 
 ## Corrected on the map
 

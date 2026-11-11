@@ -429,15 +429,17 @@
   let budgetMode = 'sources';
   function showHome() {
     selected = null; capScale = 1;
-    const B = C.budget, rows = B[budgetMode], per = B.perDrop;
+    const B = C.budget, all = B[budgetMode], rows = all.filter(r => !r.tiny), per = B.perDrop;
     let drops = '', n = 0; const tot = Math.round(rows.reduce((a, r) => a + r.af, 0) / per), counts = rows.map(r => Math.floor(r.af / per));
     rows.map((r, i) => [r.af / per - counts[i], i]).sort((a, b) => b[0] - a[0]).slice(0, tot - counts.reduce((a, c) => a + c, 0)).forEach(x => counts[x[1]]++);
     rows.forEach((r, i) => { for (let k = 0; k < counts[i]; k++, n++) drops += `<i class="drop" data-k="${r.id}" style="--c:${r.color}"></i>`; });
+    // rows too small for a whole drop get one speck, its area in proportion to a drop
+    all.filter(r => r.tiny).forEach(r => { drops += `<i class="drop tiny" data-k="${r.id}" style="--c:${r.color};--s:${Math.sqrt(r.af / per).toFixed(3)}"><b></b></i>`; });
     let h = `<h2>${B.title}</h2><p class="lede">${B.lede}</p>
       <div class="seg" role="tablist"><button role="tab" data-mode="sources" class="${budgetMode === 'sources' ? 'on' : ''}">Where it comes from</button><button role="tab" data-mode="uses" class="${budgetMode === 'uses' ? 'on' : ''}">Where it goes</button></div>
-      <div class="picto" id="picto" role="img" aria-label="${rows.map(r => `${r.label}: ${r.pct}%`).join(', ')}">${drops}</div>
+      <div class="picto" id="picto" role="img" aria-label="${all.map(r => `${r.label}: ${r.tiny ? r.val.replace('&middot;', ',') : r.pct + '%'}`).join('; ')}">${drops}</div>
       <div class="gcap">Each drop = ${fmt(per)} acre-feet a year. ${B.afNote}</div>
-      <div id="keys">${rows.map(r => `<button class="keyrow" data-k="${r.id}" data-layer="${r.layer || ''}" data-feat="${r.feat || ''}" style="--c:${r.color}"><i></i><b>${r.label}</b><span>${r.pct}% &middot; ${(r.af / 1e6).toFixed(1)}M AF</span></button><div class="gcap" style="margin:0 0 6px 24px">${r.note}</div>`).join('')}</div>
+      <div id="keys">${all.map(r => `<button class="keyrow${r.tiny ? ' sub' : ''}" data-k="${r.id}" data-layer="${r.layer || ''}" data-feat="${r.feat || ''}" style="--c:${r.color}"><i></i><b>${r.label}</b><span>${r.tiny ? r.val : `${r.pct}% &middot; ${(r.af / 1e6).toFixed(1)}M AF`}</span></button><div class="gcap" style="margin:0 0 6px 24px">${r.note}</div>`).join('')}</div>
       ${B.body}
       <h3>Explore</h3><p style="font-size:13.5px">Drag to pan, scroll or pinch to zoom, and click anything: a dam, a field, a canal, or bare desert.</p>`;
     const groups = C.browse;

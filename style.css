@@ -82,6 +82,9 @@ h1, h2, h3, .px { font-family: var(--pixel); font-weight: 400; letter-spacing: .
 .picto { display: grid; grid-template-columns: repeat(14, 1fr); gap: 3px; margin: 6px 0 8px; }
 .drop { aspect-ratio: 1; border: 2px solid var(--ink); border-radius: 0 55% 55% 55%; transform: rotate(45deg) scale(.78); background: var(--c); transition: opacity .15s; }
 .picto.dim .drop:not(.hl) { opacity: .22; }
+.drop.tiny { transform: none; border: 2px dotted var(--ink2); border-radius: 50%; background: none; display: grid; place-items: center; }
+.drop.tiny b { display: block; width: calc(var(--s) * 78%); aspect-ratio: 1; background: var(--c); border-radius: 0 55% 55% 55%; transform: rotate(45deg); }
+.keyrow.sub i { width: 8px; height: 8px; margin: 0 2px; border-radius: 50%; }
 .keyrow { display: flex; align-items: baseline; gap: 8px; width: 100%; border: 0; background: none; padding: 3px 4px; text-align: left; border-radius: 2px; }
 .keyrow:hover, .keyrow.hl { background: var(--paper2); }
 .keyrow i { width: 12px; height: 12px; border: 2px solid var(--ink); background: var(--c); flex: none; transform: translateY(1px); }
