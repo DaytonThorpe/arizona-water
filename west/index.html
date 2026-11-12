@@ -73,10 +73,11 @@
 <script>
 /* One app, many regions. ?s=co picks the region; each has a baked data file and a content file. */
 (() => {
-  const REG = { west: ['data/west.js', 'content/west.js'], az: ['../data.js', '../content.js', 'content/az.js'], co: ['data/co.js', 'content/co.js'] };
+  const REG = { west: ['data/west.js', 'content/west.js'], az: ['../data.js', '../content.js', 'content/az.js'], co: ['data/co.js', 'content/co.js'],
+    ca: ['data/ca.js', 'content/ca.js'], nm: ['data/nm.js', 'content/nm.js'], ut: ['data/ut.js', 'content/ut.js'], id: ['data/id.js', 'content/id.js'], mt: ['data/mt.js', 'content/mt.js'] };
   const id = (new URLSearchParams(location.search).get('s') || 'west').toLowerCase();
   const files = (REG[id] || REG.west).concat(['js/terrain.js', 'js/app.js']);
-  const V = '2';
+  const V = '3';
   (function next(i) { if (i >= files.length) return; const s = document.createElement('script'); s.src = files[i] + '?v=' + V; s.onload = () => next(i + 1); s.onerror = () => { document.getElementById('loading').textContent = 'Could not load the map.'; }; document.body.appendChild(s); })(0);
 })();
 </script>

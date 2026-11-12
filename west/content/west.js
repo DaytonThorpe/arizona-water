@@ -29,7 +29,7 @@
     pct: 27, pctNote: '6.95 million AF, at 1,040 ft (8 Nov 2026)',
     stats: [['1.25M AF', 'a year the three Lower Basin states give up in 2027 and 2028'], ['760,000 AF', 'of that is Arizona\'s'], ['440,000 / 50,000', 'California\'s and Nevada\'s shares of the cut', 1]],
     body: '<p>Mexico gives up another 250,000 AF a year. The Upper Basin states have no mandatory cut. Nevada has sued over the plan.</p><p><button class="btn go" data-go="az">See how the cuts land in Arizona</button></p>', sources: [S.weekly, S.doi, S.crs] });
-  add({ id: 'gsl', kind: 'info', name: 'Great Salt Lake', lake: 'Great Salt Lake', lon: -112.5, lat: 41.1, tier: 1, zoom: .9,
+  add({ id: 'gsl', kind: 'info', icon: 'lake', kindLabel: 'Lake', name: 'Great Salt Lake', lake: 'Great Salt Lake', lon: -112.5, lat: 41.1, tier: 1, zoom: .9,
     lede: 'A lake with no outlet, fed by rivers that farms and cities tap first. It is shrinking.',
     stats: [['4,190.0 ft', 'south arm level, 11 Nov 2026'], ['4,188.5 ft', 'record low, Nov 2022'], ['4,198 ft', 'the state\'s target for a healthy lake', 1]],
     body: '<p>Reaching the target by 2055 would take about 800,000 AF a year of extra inflow. About 400,000 AF in total was delivered from 2021 to 2025.</p>', sources: [['Utah Division of Water Resources', 'https://wre-rapps.utah.gov/GSLApp/'], S.gsl, ['Strike Team report, Jan 2026', 'https://d36oiwf74r1rap.cloudfront.net/wp-content/uploads/2026/01/GSL-Jan2026.pdf']] });
@@ -61,8 +61,8 @@
     body: '<p>About 600,000 AF of that loss came in water year 2026 alone.</p>', sources: [S.usgs, ['Boise State Public Radio, Aug 2026', 'https://www.boisestatepublicradio.org/environment/2026-08-26/idaho-drought-eastern-snake-plain-aquifer']] });
   add({ id: 'ogallala', kind: 'well', name: 'Ogallala Aquifer', lon: -102.4, lat: 40.0, tier: 2,
     lede: 'The aquifer under the High Plains, pumped for irrigation from South Dakota to Texas. It refills far more slowly than it is drawn down.',
-    stats: [['286M AF', 'lost across eight states since about 1950'], ['18.3M AF', 'of that under Colorado'], ['11.4M AF', 'under New Mexico']],
-    body: '<p>For scale, Colorado\'s share of the loss is nearly three times what Lake Powell holds today.</p>', sources: [S.ogallala] });
+    stats: [['286M AF', 'lost from the whole aquifer, across eight states, since about 1950'], ['18.3M AF', 'of that loss was under Colorado'], ['11.4M AF', 'of that loss was under New Mexico']],
+    body: '<p>For scale, the 18.3 million AF lost under Colorado is nearly three times what Lake Powell holds today.</p>', sources: [S.ogallala] });
   add({ id: 'klamath', kind: 'info', name: 'Klamath River dam removals', short: 'Klamath dams removed', lon: -122.435, lat: 41.934, tier: 2,
     lede: 'Four hydropower dams here were taken out by 2024, the largest dam removal in US history.',
     stats: [['400+ mi', 'of salmon habitat reopened'], ['20,000+', 'Chinook swam upstream in the two years after']],
@@ -96,6 +96,7 @@
   window.MAPCONTENT = {
     meta: { title: 'Water in the West: an explorable map', h1: 'Water in the West', tagline: 'Where it comes from. Where it goes.', aria: 'Interactive map of water in the western United States. Use the lists in the side panel to browse the same information without the map.', home: 'Show the whole West' },
     features: F, stateCards, stateLabels: true,
+    sprites: { lake: ['..bbbbbb..', '.bBbbbbBb.', 'bbbbBbbbbb', '.bbBbbbbb.', '..bbbbbb..'] },   // a quiet marker for a lake that is the subject itself
     kinds: { well: ['farms', 'well', 'Groundwater'], pump: ['reservoirs', 'pump', 'Pumping hub'], info: ['rivers', 'info', 'Good to know'] },
     layers: { canals: false, ground: false, golf: false, tribal: false, industry: false, cities: false },
     riverStyle: {
@@ -146,7 +147,7 @@
     tour: [
       { title: 'A dry region that moves its water', text: 'Nine western states withdraw about 97 million acre-feet of water a year. Little of it is used where it falls. The panel shows where it comes from and where it goes.', view: 'home', home: true },
       { title: 'It starts as snow', text: 'Most of the West\'s rivers begin as winter snow on a few mountain ranges: the Rockies, the Sierra Nevada, the Cascades. The white areas are where snow usually piles up.', view: 'home', season: 'winter', layers: ['rivers', 'reservoirs'] },
-      { title: 'A river promised twice over', text: 'The Colorado was divided in 1922 on the assumption that it carried 16.4 million acre-feet a year. Since 2000 it has averaged 12.4 million. Lees Ferry is where the two halves are measured.', lon: -111.2, lat: 37.4, zoom: .55, select: 'leesferry', layers: ['rivers', 'reservoirs', 'farms'] },
+      { title: 'A river promised twice over', text: 'The Colorado was divided in 1922 on the assumption that it carried 16.4 million acre-feet a year. Since 2000 it has averaged 12.4 million. Lees Ferry is the dividing point: the four states upstream share one part of the river, and the three states downstream share the other.', lon: -111.2, lat: 37.4, zoom: .55, select: 'leesferry', layers: ['rivers', 'reservoirs', 'farms'] },
       { title: 'The reservoirs show the gap', text: 'Lake Powell and Lake Mead are each 27% full. From 2027 Arizona, California and Nevada give up 1.25 million acre-feet a year between them.', lon: -113.1, lat: 36.4, zoom: .6, select: 'mead', layers: ['rivers', 'reservoirs', 'farms'] },
       { title: 'Most of it goes to farms', text: 'Irrigation takes about 83% of the water withdrawn in these states. California\'s Central Valley alone holds more than a third of the irrigated land.', lon: -120.6, lat: 37.4, zoom: .5, select: 'centralvalley', layers: ['rivers', 'reservoirs', 'farms'] },
       { title: 'When rivers run short, pumps run', text: 'More than a third of the water comes from wells. Under the High Plains, the Ogallala Aquifer has lost 286 million acre-feet since about 1950. Under Idaho, the Snake Plain aquifer has lost more than 14 million.', lon: -108, lat: 41.5, zoom: .3, select: 'ogallala', layers: ['rivers', 'reservoirs', 'farms'] },
