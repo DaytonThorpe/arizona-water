@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Water in the West: an explorable map</title>
+<meta name="description" content="An interactive, SimCity-style map of where the West's water comes from and where it goes, state by state, built from public data.">
+<link rel="canonical" href="https://water.howto115.com/west/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Water in the West: an explorable map">
+<meta property="og:description" content="Where the West's water comes from and where it goes, state by state: rivers, reservoirs, canals, aquifers, farms and cities on a SimCity-style map built from public data.">
+<meta property="og:url" content="https://water.howto115.com/west/">
+<meta property="og:image" content="https://water.howto115.com/preview.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#2b2430">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="west.css?v=2">
+</head>
+<body>
+<div id="app">
+  <canvas id="map" tabindex="0" aria-label="Interactive map of Arizona's water system. Use the Places list in the side panel to browse the same information without the map."></canvas>
+
+  <header id="hud">
+    <div class="plate title">
+      <a id="navWest" href="?s=west" hidden>&#9666; The West</a>
+      <h1>Water in the West</h1>
+      <p>Where it comes from. Where it goes.</p>
+    </div>
+    <div class="plate stats" id="hudstats"></div>
+  </header>
+
+  <nav id="layers" class="plate" aria-label="Map layers">
+    <button id="layersToggle" class="mini" aria-expanded="true">Layers</button>
+    <div id="layerList"></div>
+    <div class="season" role="group" aria-label="Season">
+      <button data-season="summer" class="on">Summer</button><button data-season="winter">Winter</button>
+    </div>
+  </nav>
+
+  <div id="zoom" class="plate">
+    <button id="zin" aria-label="Zoom in">+</button>
+    <button id="zout" aria-label="Zoom out">&minus;</button>
+    <button id="zhome" aria-label="Show all of Arizona" title="Show all of Arizona">&#9633;</button>
+    <button id="zfull" aria-label="Open the map full screen in a new tab" title="Open full screen" hidden>&#10530;</button>
+  </div>
+
+  <aside id="panel" class="plate" aria-live="polite">
+    <button id="panelHandle" aria-label="Expand or collapse panel"></button>
+    <div id="panelBody"></div>
+  </aside>
+
+  <div id="tour" class="plate" hidden>
+    <div id="tourText"></div>
+    <div class="tourNav">
+      <button id="tourPrev">&larr; Back</button>
+      <span id="tourDots"></span>
+      <button id="tourNext" class="primary">Next &rarr;</button>
+      <button id="tourExit" class="mini" aria-label="Exit tour">&times;</button>
+    </div>
+  </div>
+  <button id="tourStart" class="plate primary">&#9654; Take the 2-minute tour</button>
+
+  <div id="legend" class="plate" hidden></div>
+  <div id="scale"><span id="scaleBar"></span><span id="scaleTxt"></span></div>
+  <div id="tip" hidden></div>
+  <div id="loading">Loading map&hellip;</div>
+</div>
+<script>
+/* One app, many regions. ?s=co picks the region; each has a baked data file and a content file. */
+(() => {
+  const REG = { west: ['data/west.js', 'content/west.js'], az: ['../data.js', '../content.js', 'content/az.js'], co: ['data/co.js', 'content/co.js'] };
+  const id = (new URLSearchParams(location.search).get('s') || 'west').toLowerCase();
+  const files = (REG[id] || REG.west).concat(['js/terrain.js', 'js/app.js']);
+  const V = '2';
+  (function next(i) { if (i >= files.length) return; const s = document.createElement('script'); s.src = files[i] + '?v=' + V; s.onload = () => next(i + 1); s.onerror = () => { document.getElementById('loading').textContent = 'Could not load the map.'; }; document.body.appendChild(s); })(0);
+})();
+</script>
+</body>
+</html>
