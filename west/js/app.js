@@ -151,7 +151,8 @@
   const w2s = (x, y) => [(x - cam.x) * cam.z + vw / 2, (y - cam.y) * cam.z + vh / 2];
   const s2w = (x, y) => [(x - vw / 2) / cam.z + cam.x, (y - vh / 2) / cam.z + cam.y];
   function homeView() {
-    const p = pad(), aw = vw - p.l - p.r, ah = vh - p.t - p.b;
+    const p = pad(); if (!compact()) p.t = 92;   // keep the top of the map clear of the title and stats plates
+    const aw = vw - p.l - p.r, ah = vh - p.t - p.b;
     const z = Math.min(aw / (WW * .96), ah / (WH * .97));
     return { z, x: WW / 2 - ((p.l - p.r) / 2) / z, y: WH * .5 - ((p.t - p.b) / 2) / z };
   }
