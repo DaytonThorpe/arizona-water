@@ -547,7 +547,33 @@
   // embedded in a blog post: offer a way out to the full-screen page (a framed map is cramped on a phone)
   let framed = false; try { framed = self !== top; } catch (e) { framed = true; }
   if (framed) { $('#zfull').hidden = false; $('#zfull').onclick = () => open(location.href, '_blank', 'noopener'); }
-  $('#panelHandle').onclick = () => { if (panel.classList.contains('min')) panel.classList.remove('min'); else if (panel.classList.contains('max')) { panel.classList.remove('max'); panel.classList.add('min'); } else panel.classList.add('max'); };
+  // bottom sheet: drag the handle to resize (snaps to small / medium / tall); a tap or Enter cycles through the three
+  {
+    const handle = $('#panelHandle'); let sd = null;
+    const sheetState = () => panel.classList.contains('min') ? 0 : panel.classList.contains('max') ? 2 : 1;
+    const setSheet = n => { panel.classList.toggle('min', n === 0); panel.classList.toggle('max', n === 2); };
+    const cycle = s => setSheet(s === 0 ? 1 : s === 2 ? 0 : 2);
+    handle.addEventListener('pointerdown', e => {
+      if (sideSheet()) return;
+      sd = { y: e.clientY, h: panel.getBoundingClientRect().height, moved: 0, s: sheetState() };
+      try { handle.setPointerCapture(e.pointerId); } catch (err) {}
+      panel.style.transition = 'none';
+    });
+    handle.addEventListener('pointermove', e => {
+      if (!sd) return; const dy = sd.y - e.clientY; sd.moved = Math.max(sd.moved, Math.abs(dy));
+      if (sd.moved > 5) panel.style.height = Math.max(64, Math.min(innerHeight * .9, sd.h + dy)) + 'px';
+    });
+    const end = e => {
+      if (!sd) return; const d = sd, dy = d.y - e.clientY; sd = null; panel.style.transition = '';
+      if (d.moved <= 5) { panel.style.height = ''; if (e.type === 'pointerup') cycle(d.s); return; }
+      const h = d.h + dy, snaps = [64, innerHeight * (panel.classList.contains('touring') ? .54 : .46), innerHeight * .82];
+      let n = 0; snaps.forEach((v, i) => { if (Math.abs(v - h) < Math.abs(snaps[n] - h)) n = i; });
+      if (n === d.s && Math.abs(dy) > 36) n = Math.max(0, Math.min(2, d.s + Math.sign(dy)));   // a clear flick moves one step even if it stops short
+      setSheet(n); requestAnimationFrame(() => { panel.style.height = ''; });
+    };
+    handle.addEventListener('pointerup', end); handle.addEventListener('pointercancel', end);
+    handle.addEventListener('click', e => { if (e.detail === 0) cycle(sheetState()); });   // keyboard activation only; pointer taps are handled above
+  }
   addEventListener('resize', resize);
 
   function updateScale() {

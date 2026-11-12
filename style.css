@@ -149,7 +149,7 @@ input[type=range] { width: 100%; accent-color: var(--water); margin: 4px 0; }
   #panel { top: auto; left: 0; right: 0; bottom: 0; width: auto; height: 46vh; height: 46dvh; border-width: 2px 0 0; box-shadow: 0 -4px 0 rgba(43,36,48,.35); transition: height .2s; padding-bottom: env(safe-area-inset-bottom); }
   #panel.touring { height: 54vh; height: 54dvh; }
   #panel.min { height: calc(64px + env(safe-area-inset-bottom)); } #panel.max { height: 82vh; height: 82dvh; }
-  #panelHandle { display: block; height: 26px; border: 0; background: none; flex: none; position: relative; }
+  #panelHandle { display: block; height: 30px; border: 0; background: none; flex: none; position: relative; touch-action: none; cursor: grab; }
   #panelHandle::after { content: ''; position: absolute; left: 50%; top: 10px; width: 48px; height: 5px; margin-left: -24px; background: var(--ink); }
   #panelBody { padding-top: 2px; }
   #panelBody .btn, .chip, .seg button { min-height: 38px; } .chip { padding: 6px 9px; } .back { padding: 8px 0; margin: 0; }
