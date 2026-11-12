@@ -85,7 +85,7 @@
     co: st('6.0M', '11.6', 85, 87, 8, '3.0M', 'Every major river in Colorado flows out of the state. Most of the water falls west of the Continental Divide, and most of the people live east of it.', null, 'co', 'Colorado'),
     ca: st('39.4M', '28.7', 33, 74, 20, '9.3M', 'Two giant canal systems move northern California\'s water south through the Delta to farms and cities.', S.cvp, 'ca', 'California'),
     nm: st('2.1M', '3.2', 52, 85, 9, '0.8M', 'Elephant Butte, the Rio Grande\'s main reservoir, fell to about 1.4% full in summer 2026, its lowest since 1971.', ['Western Water, Aug 2026', 'https://www.western-water.com/2026/08/21/still-at-1-4-elephant-butte-at-lowest-level-since-1971/'], 'nm', 'New Mexico'),
-    ut: st('3.5M', '4.3', 73, 78, 16, '1.3M', 'Great Salt Lake stood 1.5 feet above its record low in November 2026, and 8 feet below the level the state calls healthy.', S.gsl, null, 'Utah'),
+    ut: st('3.5M', '4.3', 73, 78, 16, '1.3M', 'Great Salt Lake stood 1.5 feet above its record low in November 2026, and 8 feet below the level the state calls healthy.', S.gsl, 'ut', 'Utah'),
     id: st('2.0M', '19.9', 70, 86, 2, '3.8M', 'Idaho withdraws more water than any state here except California, almost all of it to irrigate the Snake River Plain.', null, null, 'Idaho'),
     mt: st('1.1M', '11.0', 98, 97, 2, '2.5M', 'Montana runs almost entirely on river water, and nearly all of it goes to irrigation.', null, null, 'Montana'),
     _default: { lede: 'This state is not part of the map yet.' },
@@ -132,7 +132,7 @@
       body: `<div class="note">All figures here are from the US Geological Survey's 2015 water-use data, the newest complete count that covers every state the same way. The nine states are the seven on this map plus Nevada and Wyoming. State agencies count differently, so each state's own map uses that state's numbers.</div>
         <div class="note hot"><b>What is changing:</b> Lake Powell and Lake Mead, the two biggest reservoirs in the country, are each 27% full. From 2027, Arizona, California and Nevada together give up 1.25 million AF of Colorado River water a year.</div>`,
     },
-    statesNav: { title: 'Pick a state', items: [['az', 'Arizona', 1], ['co', 'Colorado', 1], ['ca', 'California', 1], ['nm', 'New Mexico', 1], ['ut', 'Utah', 0], ['id', 'Idaho', 0], ['mt', 'Montana', 0]] },
+    statesNav: { title: 'Pick a state', items: [['az', 'Arizona', 1], ['co', 'Colorado', 1], ['ca', 'California', 1], ['nm', 'New Mexico', 1], ['ut', 'Utah', 1], ['id', 'Idaho', 0], ['mt', 'Montana', 0]] },
     exploreHint: 'Drag to pan, scroll or pinch to zoom. Click a state for its numbers, or click a dam, lake or river.',
     browse: [
       ['The Colorado River', ['powell', 'leesferry', 'mead']],
@@ -152,7 +152,7 @@
       { title: 'Most of it goes to farms', text: 'Irrigation takes about 83% of the water withdrawn in these states. California\'s Central Valley alone holds more than a third of the irrigated land.', lon: -120.6, lat: 37.4, zoom: .5, select: 'centralvalley', layers: ['rivers', 'reservoirs', 'farms'] },
       { title: 'When rivers run short, pumps run', text: 'More than a third of the water comes from wells. Under the High Plains, the Ogallala Aquifer has lost 286 million acre-feet since about 1950. Under Idaho, the Snake Plain aquifer has lost more than 14 million.', lon: -108, lat: 41.5, zoom: .3, select: 'ogallala', layers: ['rivers', 'reservoirs', 'farms'] },
       { title: 'Some of it is being given back', text: 'Four dams on the Klamath River came out by 2024, and salmon returned within two years. Utah is trying to find 800,000 acre-feet a year to refill Great Salt Lake.', lon: -117.5, lat: 41.6, zoom: .32, select: 'gsl', layers: ['rivers', 'reservoirs', 'farms'] },
-      { title: 'Now pick a state', text: 'Each state has its own story. Arizona, California, Colorado and New Mexico are ready to explore, and more are on the way. Click a state on the map or in the panel.', view: 'home', home: true },
+      { title: 'Now pick a state', text: 'Each state has its own story. Arizona, California, Colorado, New Mexico and Utah are ready to explore, and more are on the way. Click a state on the map or in the panel.', view: 'home', home: true },
     ],
     terrain: {
       snowLine: (lat, p) => 2400 + (40 - lat) * 115 - Math.min(1100, Math.max(0, p - 25) * 28),   // wetter ranges (Sierra, Cascades) hold snow lower down alpine: 3400, saguaro: (lon, lat, e) => e < 1150 && lat < 34.9 && lat > 31.3 && lon > -114.3 && lon < -109.5, pivot: () => false,
