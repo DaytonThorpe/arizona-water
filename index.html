@@ -74,10 +74,10 @@
 /* One app, many regions. ?s=co picks the region; each has a baked data file and a content file. */
 (() => {
   const REG = { west: ['west/data/west.js', 'west/content/west.js'], az: ['data.js', 'content.js', 'west/content/az.js'], co: ['west/data/co.js', 'west/content/co.js'],
-    ca: ['west/data/ca.js', 'west/content/ca.js'], nm: ['west/data/nm.js', 'west/content/nm.js'], ut: ['west/data/ut.js', 'west/content/ut.js'], id: ['west/data/id.js', 'west/content/id.js'], mt: ['west/data/mt.js', 'west/content/mt.js'] };
+    ca: ['west/data/ca.js', 'west/content/ca.js'], nm: ['west/data/nm.js', 'west/content/nm.js'], ut: ['west/data/ut.js', 'west/content/ut.js'], id: ['west/data/id.js', 'west/content/id.js'], mt: ['west/data/mt.js', 'west/content/mt.js'], nv: ['west/data/nv.js', 'west/content/nv.js'] };
   const id = (new URLSearchParams(location.search).get('s') || 'west').toLowerCase();
   const files = (REG[id] || REG.west).concat(['west/js/terrain.js', 'west/js/app.js']);
-  const V = '10';
+  const V = '11';
   (function next(i) { if (i >= files.length) return; const s = document.createElement('script'); s.src = files[i] + '?v=' + V; s.onload = () => next(i + 1); s.onerror = () => { document.getElementById('loading').textContent = 'Could not load the map.'; }; document.body.appendChild(s); })(0);
 })();
 </script>

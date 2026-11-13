@@ -20,11 +20,12 @@ RAW = f"{HERE}/raw"
 REGION = sys.argv[1]
 REGIONS = {
     # ext = (west, east, south, north); km = tile size; focus = state FIPS drawn at full colour
-    "west": dict(ext=(-124.9, -101.9, 31.0, 49.1), km=12, z=6, focus=["04", "06", "35", "08", "49", "16", "30"],
+    "west": dict(ext=(-124.9, -101.9, 31.0, 49.1), km=12, z=6, focus=["04", "06", "35", "08", "49", "16", "30", "32"],
                  counties=False, golf=None, river_rank=8, lake_min=1.2, tribal=False, lc_k=8,
                  sea=lambda lon, lat: (lon < -116.9) | ((lat < 32.0) & (lon < -113.9))),
     "ca": dict(ext=(-124.75, -113.85, 32.25, 42.25), km=4.5, z=7, focus=["06"], counties=True, golf="US-CA", river_rank=99, lake_min=0.0, tribal=True, lc_k=10,
                sea=lambda lon, lat: lon < -116.9),
+    "nv": dict(ext=(-120.35, -113.7, 34.75, 42.25), km=3, z=7, focus=["32"], counties=True, golf="US-NV", river_rank=99, lake_min=0.0, tribal=True, lc_k=10, sea=None),
     "nm": dict(ext=(-109.4, -102.65, 31.1, 37.3), km=3, z=7, focus=["35"], counties=True, golf="US-NM", river_rank=99, lake_min=0.0, tribal=True, lc_k=10, sea=None),
     "ut": dict(ext=(-114.4, -108.7, 36.75, 42.25), km=3, z=7, focus=["49"], counties=True, golf="US-UT", river_rank=99, lake_min=0.0, tribal=True, lc_k=10, sea=None),
     "id": dict(ext=(-117.6, -110.7, 41.75, 49.2), km=3, z=7, focus=["16"], counties=True, golf="US-ID", river_rank=99, lake_min=0.0, tribal=True, lc_k=10, sea=None),

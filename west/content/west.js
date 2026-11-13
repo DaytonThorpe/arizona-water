@@ -88,6 +88,7 @@
     ut: st('3.5M', '4.3', 73, 78, 16, '1.3M', 'Great Salt Lake stood 1.5 feet above its record low in November 2026, and 8 feet below the level the state calls healthy.', S.gsl, 'ut', 'Utah'),
     id: st('2.0M', '19.9', 70, 86, 2, '3.8M', 'Idaho withdraws more water than any state here except California, almost all of it to irrigate the Snake River Plain.', null, 'id', 'Idaho'),
     mt: st('1.1M', '11.0', 98, 97, 2, '2.5M', 'Montana runs almost entirely on river water, and nearly all of it goes to irrigation.', null, 'mt', 'Montana'),
+    nv: st('3.3M', '3.2', 53, 72, 18, '0.7M', 'Nevada has the smallest share of the Colorado River, 300,000 AF a year. It stretches that share by sending treated wastewater back to Lake Mead, which earns it credit to take more.', ['Southern Nevada Water Authority', 'https://www.snwa.com/water-resources/where-water-comes-from/'], null, 'Nevada'),
     _default: { lede: 'This state is not part of the map yet.' },
   };
   // the 2015 groundwater share for California reflects a drought year; say so wherever it is shown
@@ -129,10 +130,10 @@
         { id: 'muni', label: 'Public water supply', pct: 10, af: 10.2e6, color: 'var(--c-muni)', note: 'Homes and businesses, for 65.7 million people.' },
         { id: 'ind', label: 'Everything else', pct: 7, af: 6.4e6, color: 'var(--c-ind)', note: 'Power plants, mines, factories, livestock and fish farms.' },
       ],
-      body: `<div class="note">All figures here are from the US Geological Survey's 2015 water-use data, the newest complete count that covers every state the same way. The nine states are the seven on this map plus Nevada and Wyoming. State agencies count differently, so each state's own map uses that state's numbers.</div>
+      body: `<div class="note">All figures here are from the US Geological Survey's 2015 water-use data, the newest complete count that covers every state the same way. The nine states are the eight on this map plus Wyoming. State agencies count differently, so each state's own map uses that state's numbers.</div>
         <div class="note hot"><b>What is changing:</b> Lake Powell and Lake Mead, the two biggest reservoirs in the country, are each 27% full. From 2027, Arizona, California and Nevada together give up 1.25 million AF of Colorado River water a year.</div>`,
     },
-    statesNav: { title: 'Pick a state', items: [['az', 'Arizona', 1], ['co', 'Colorado', 1], ['ca', 'California', 1], ['nm', 'New Mexico', 1], ['ut', 'Utah', 1], ['id', 'Idaho', 1], ['mt', 'Montana', 1]] },
+    statesNav: { title: 'Pick a state', items: [['az', 'Arizona', 1], ['co', 'Colorado', 1], ['ca', 'California', 1], ['nm', 'New Mexico', 1], ['ut', 'Utah', 1], ['id', 'Idaho', 1], ['mt', 'Montana', 1], ['nv', 'Nevada', 0]] },
     exploreHint: 'Drag to pan, scroll or pinch to zoom. Click a state for its numbers, or click a dam, lake or river.',
     browse: [
       ['The Colorado River', ['powell', 'leesferry', 'mead']],
@@ -142,7 +143,7 @@
     ],
     riverLabels: [['COLORADO R.', -110.6, 37.75, .3, -40], ['COLUMBIA R.', -119.6, 46.25, .3, 0], ['SNAKE R.', -115.4, 42.75, .3, 10], ['MISSOURI R.', -109.5, 47.85, .3, 0], ['RIO GRANDE', -106.55, 34.9, .3, 80], ['SACRAMENTO R.', -122.35, 39.6, .45, 80], ['GREEN R.', -110.3, 39.6, .45, 80], ['YELLOWSTONE R.', -107.2, 46.1, .45, -20], ['ARKANSAS R.', -103.2, 38.25, .45, 0]],
     neighbors: [['CANADA', -111.5, 49.25, 0], ['MEXICO', -110.2, 31.2, 0], ['PACIFIC OCEAN', -123.6, 35.0, -70]],
-    about: `<p style="font-size:13px">The landscape is drawn from real data, in 12 km squares: elevation (Mapzen/AWS terrain tiles), land cover such as fields, rooftops and forest (Esri/Impact Observatory Sentinel-2), and rainfall (PRISM 1991–2020 normals). Rivers and lakes are from Natural Earth; boundaries from the Census Bureau. River line widths are schematic. Nevada, Wyoming, Oregon and Washington are drawn for context only. Figures are as of November 2026 and each card links its sources.</p>`,
+    about: `<p style="font-size:13px">The landscape is drawn from real data, in 12 km squares: elevation (Mapzen/AWS terrain tiles), land cover such as fields, rooftops and forest (Esri/Impact Observatory Sentinel-2), and rainfall (PRISM 1991–2020 normals). Rivers and lakes are from Natural Earth; boundaries from the Census Bureau. River line widths are schematic. Wyoming, Oregon and Washington are drawn for context only. Figures are as of November 2026 and each card links its sources.</p>`,
     legend: { rain: 'From under 5 inches a year in the deserts to over 100 in the coastal mountains. PRISM 1991–2020 normals.', ground: '', snow: 'Where snow usually accumulates (drawn from elevation; not a live snow map).' },
     tour: [
       { title: 'A dry region that moves its water', text: 'Nine western states withdraw about 97 million acre-feet of water a year. Little of it is used where it falls. The panel shows where it comes from and where it goes.', view: 'home', home: true },
@@ -152,7 +153,7 @@
       { title: 'Most of it goes to farms', text: 'Irrigation takes about 83% of the water withdrawn in these states. California\'s Central Valley alone holds more than a third of the irrigated land.', lon: -120.6, lat: 37.4, zoom: .5, select: 'centralvalley', layers: ['rivers', 'reservoirs', 'farms'] },
       { title: 'When rivers run short, pumps run', text: 'More than a third of the water comes from wells. Under the High Plains, the Ogallala Aquifer has lost 286 million acre-feet since about 1950. Under Idaho, the Snake Plain aquifer has lost more than 14 million.', lon: -108, lat: 41.5, zoom: .3, select: 'ogallala', layers: ['rivers', 'reservoirs', 'farms'] },
       { title: 'Some of it is being given back', text: 'Four dams on the Klamath River came out by 2024, and salmon returned within two years. Utah is trying to find 800,000 acre-feet a year to refill Great Salt Lake.', lon: -117.5, lat: 41.6, zoom: .32, select: 'gsl', layers: ['rivers', 'reservoirs', 'farms'] },
-      { title: 'Now pick a state', text: 'Each state has its own story. All seven states are ready to explore. Click a state on the map or in the panel.', view: 'home', home: true },
+      { title: 'Now pick a state', text: 'Each state has its own story. Seven states are ready to explore, and Nevada is on the way. Click a state on the map or in the panel.', view: 'home', home: true },
     ],
     terrain: {
       snowLine: (lat, p) => 2400 + (40 - lat) * 115 - Math.min(1100, Math.max(0, p - 25) * 28),   // wetter ranges (Sierra, Cascades) hold snow lower down alpine: 3400, saguaro: (lon, lat, e) => e < 1150 && lat < 34.9 && lat > 31.3 && lon > -114.3 && lon < -109.5, pivot: () => false,
