@@ -27,3 +27,12 @@ On a phone the best experience is the page on its own (link to `arizona-water.ht
 ## Updating
 
 Reservoir levels, shortage rules and deliveries in `content.js` are as of November 2026. Search that file for "2026" to find the time-sensitive figures.
+
+## Multi-state map (November 2026)
+
+The main page now loads one app for every region: `/` is the whole-West overview, and `?s=az`, `?s=ca`, `?s=co`,
+`?s=id`, `?s=mt`, `?s=nm`, `?s=ut` open a state. The app lives in `west/` (`west/js`, `west/data/<id>.js`,
+`west/content/<id>.js`); Arizona reuses the original `data.js` and `content.js`. `build/build_region.py <id>` bakes a
+region's terrain and `build/prep_<id>.py` gathers that state's canals, lakes and groundwater areas. Research notes for
+each state, including what could not be verified, are in `research/`. The original single-state app in `js/` is kept
+but no longer linked.
