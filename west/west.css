@@ -13,3 +13,7 @@
   #legend { max-width: 46vw; padding: 5px 7px; font-size: 11.5px; }
   #legend p { display: none; }
 }
+/* desktop: the link back adds a line to the title plate, so start the layer list below the plate instead of under it */
+@media (min-width: 821px) and (min-height: 521px) {
+  #hud:has(#navWest:not([hidden])) ~ #layers { top: 110px; }
+}
