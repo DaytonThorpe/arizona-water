@@ -23,6 +23,19 @@ EGRID_YEAR, INVENTORY = 2023, 'September 2026'
 
 # region id -> (base data file, global name, states whose service territories to draw)
 REGIONS = {'az': ('data.js', 'AZDATA', ['AZ'])}
+for _id in ('co', 'ca', 'nm', 'ut', 'id', 'mt', 'nv'):
+    REGIONS[_id] = (f'west/data/{_id}.js', 'MAPDATA', [_id.upper()])
+# Optional per-region settings in build/power/<id>.json:
+#   {"merge": [[name pattern, plant id to keep, display name], ...], "minMW": 1}
+AZ_MERGE = [[r'^Gila River Power Block', 55306, 'Gila River Power Station'], [r'^Mesquite Generating Station Block', 55481, 'Mesquite Generating Station'],
+            [r'^Hoover Dam', 8902, 'Hoover Dam'], [r'^Chevelon Butte', 66001, 'Chevelon Butte Wind Farm']]
+
+
+def config(region):
+    p = os.path.join(ROOT, 'build', 'power', region + '.json')
+    c = json.load(open(p)) if os.path.exists(p) else {}
+    if region == 'az': c.setdefault('merge', AZ_MERGE)
+    return c
 
 
 def fetch(url, name, data=None, tries=4):
@@ -158,12 +171,20 @@ def main(region):
         out.append(rec)
     # EIA lists some plants as several entries (power blocks, phases, the two halves of Hoover Dam) while EPA reports their output under one.
     # Merge each group into one plant: [name pattern, id to keep, display name]
-    MERGE = [(r'^Gila River Power Block', 55306, 'Gila River Power Station'), (r'^Mesquite Generating Station Block', 55481, 'Mesquite Generating Station'),
-             (r'^Hoover Dam', 8902, 'Hoover Dam'), (r'^Chevelon Butte', 66001, 'Chevelon Butte Wind Farm')]
+    CFG = config(region); MERGE = CFG.get('merge', []); MINMW = CFG.get('minMW', 1)
+    out = [r for r in out if r['mw'] >= MINMW]
     for pat, keep, name in MERGE:
         grp = [r for r in out if re.search(pat, r['n'])]
         if len(grp) < 2: continue
-        m = next(r for r in grp if r['id'] == keep); m['n'] = name; m['parts'] = len(grp)
+        m = next((r for r in grp if r['id'] == keep), None)
+        if m is None: print('  merge: id', keep, 'not found for', pat); continue
+        m['n'] = name; m['parts'] = len(grp)
+        mix = collections.Counter()
+        for r in grp:
+            for k, v in (r.get('mix') or {r['f']: r['mw']}).items(): mix[k] += v
+        mix = {k: round(v, 1) for k, v in mix.items() if v >= 1}
+        if len(mix) > 1: m['mix'] = mix
+        else: m.pop('mix', None)
         for r in grp:
             if r is m: continue
             m['mw'] = round(m['mw'] + r['mw'], 1)
@@ -243,13 +264,34 @@ def main(region):
 
     # ---------------------------------------------------------------- service territories: HIFLD
     terr = []
-    for st in REGIONS[region][2]:
-        qs = urllib.parse.urlencode({'where': f"STATE='{st}'", 'outFields': 'NAME,TYPE,HOLDING_CO', 'outSR': 4326, 'f': 'geojson', 'geometryPrecision': 4})
-        gj = json.load(open(fetch(TERR_URL + '?' + qs, f'territories_{st}.geojson')))
-        for ft in gj['features']:
-            g = shape(ft['geometry']).buffer(0).intersection(frame).simplify(.01)
+    if region == 'az':                                   # the pilot: utilities filed under Arizona, clipped to the frame
+        for st in REGIONS[region][2]:
+            qs = urllib.parse.urlencode({'where': f"STATE='{st}'", 'outFields': 'NAME,TYPE,HOLDING_CO', 'outSR': 4326, 'f': 'geojson', 'geometryPrecision': 4})
+            gj = json.load(open(fetch(TERR_URL + '?' + qs, f'territories_{st}.geojson')))
+            for ft in gj['features']:
+                g = shape(ft['geometry']).buffer(0).intersection(frame).simplify(.01)
+                if g.is_empty: continue
+                rings = [flat(poly.exterior.coords) for poly in (g.geoms if hasattr(g, 'geoms') else [g]) if poly.geom_type == 'Polygon' and poly.area > .0008]
+                if rings: terr.append({'n': ft['properties']['NAME'].strip(), 't': ft['properties']['TYPE'], 'a': round(g.area, 3), 'r': rings})
+    else:                                                # every utility whose territory touches the state, clipped to the state line
+        zs = fetch('https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_us_state_5m.zip', 'states_5m.zip'); sd = os.path.join(RAW, 'states_5m')
+        if not os.path.isdir(sd): zipfile.ZipFile(zs).extractall(sd)
+        ssf = shapefile.Reader(os.path.join(sd, 'cb_2023_us_state_5m.shp')); sfl = [f[0] for f in ssf.fields[1:]]
+        want = set(REGIONS[region][2])
+        state = unary_union([shape(ssf.shape(i).__geo_interface__) for i in range(len(ssf)) if dict(zip(sfl, ssf.record(i)))['STUSPS'] in want]).buffer(0)
+        sb = state.bounds
+        feats, off = [], 0
+        while True:
+            qs = urllib.parse.urlencode({'where': '1=1', 'geometry': f'{sb[0]},{sb[1]},{sb[2]},{sb[3]}', 'geometryType': 'esriGeometryEnvelope', 'inSR': 4326, 'spatialRel': 'esriSpatialRelIntersects',
+                                         'outFields': 'NAME,TYPE,HOLDING_CO,STATE', 'outSR': 4326, 'f': 'geojson', 'geometryPrecision': 3, 'resultOffset': off, 'resultRecordCount': 100})
+            page = json.load(open(fetch(TERR_URL + '?' + qs, f'territories_{region}_{off}.geojson')))['features']
+            feats += page; off += 100
+            if len(page) < 100: break
+        for ft in feats:
+            if not ft.get('geometry'): continue
+            g = shape(ft['geometry']).buffer(0).intersection(state).simplify(.012)
             if g.is_empty: continue
-            rings = [flat(poly.exterior.coords) for poly in (g.geoms if hasattr(g, 'geoms') else [g]) if poly.geom_type == 'Polygon' and poly.area > .0008]
+            rings = [flat(poly.exterior.coords) for poly in (g.geoms if hasattr(g, 'geoms') else [g]) if poly.geom_type == 'Polygon' and poly.area > .002]
             if rings: terr.append({'n': ft['properties']['NAME'].strip(), 't': ft['properties']['TYPE'], 'a': round(g.area, 3), 'r': rings})
     terr.sort(key=lambda t: -t['a'])
     print('territories', len(terr), [(t['n'], t['a']) for t in terr[:6]])

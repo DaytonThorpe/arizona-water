@@ -1,0 +1,14 @@
+{"merge": [
+ ["^Hoover Dam", 8902, "Hoover Dam"],
+ ["^AES Alamitos (LLC|Energy Center)$", 315, "Alamitos Generating Station and Energy Center"],
+ ["^AES Huntington Beach", 335, "Huntington Beach Energy Project"],
+ ["^Ivanpah \\d", 57074, "Ivanpah Solar Electric Generating System"],
+ ["^Solar Star [12]$", 58388, "Solar Star"],
+ ["^Desert Sunlight \\d", 57993, "Desert Sunlight Solar Farm"],
+ ["^Alta Wind", 57282, "Alta Wind Energy Center"],
+ ["^Coso (Finance|Power|Energy)", 10873, "Coso geothermal plants"],
+ ["^(Salton Sea Power|CE Leathers|Del Ranch Company|Elmore Company|Vulcan-BN|CE Turbo)", 10759, "Salton Sea geothermal plants (CalEnergy)"],
+ ["^(Geysers Unit 5-20|Calistoga Power Plant|Sonoma California Geothermal|Aidlin Geothermal)", 286, "The Geysers (Calpine plants)"],
+ ["^Big Creek \\d", 319, "Big Creek powerhouses"],
+ ["^Shiloh", 56362, "Shiloh wind farms"]
+], "minMW": 1}

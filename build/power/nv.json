@@ -1,0 +1,30 @@
+{
+ "merge": [
+  [
+   "^Hoover Dam",
+   154,
+   "Hoover Dam"
+  ],
+  [
+   "^Copper Mountain Solar|^CM48$|^CM10$",
+   58017,
+   "Copper Mountain Solar"
+  ],
+  [
+   "^McGinness Hills",
+   57446,
+   "McGinness Hills"
+  ],
+  [
+   "^Techren Solar",
+   61930,
+   "Techren Solar"
+  ],
+  [
+   "^Ivanpah",
+   57074,
+   "Ivanpah Solar"
+  ]
+ ],
+ "minMW": 1
+}
