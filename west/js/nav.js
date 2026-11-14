@@ -21,6 +21,15 @@
   sw.innerHTML = tab('water', 'Water') + tab('power', 'Power');
   title.append(menu, sw);
 
+  // on a state's map: a link up to the West, and the zoom-out button leads there once the state is fully zoomed out (see app.js)
+  if (id !== 'west') {
+    document.body.classList.add('in-state');
+    const up = document.createElement('a');
+    up.className = 'up'; up.href = '?s=west'; up.title = 'Back to the map of the West'; up.innerHTML = '&#9666; The West';
+    title.prepend(up);
+    window.MAPNAV = { up: '?s=west' };
+  }
+
   sw.querySelector('a[href]').addEventListener('click', e => {
     const c = window.AZMAP && window.AZMAP.cam;
     if (!c || e.metaKey || e.ctrlKey || e.shiftKey) return;

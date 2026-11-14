@@ -607,7 +607,7 @@
     else if (k === '+' || k === '=') zoomAt(vw / 2, vh / 2, 1.3); else if (k === '-' || k === '_') zoomAt(vw / 2, vh / 2, 1 / 1.3); else if (k === '0') goHome(); else return;
     e.preventDefault(); clampCam();
   });
-  $('#zin').onclick = () => zoomAt(vw / 2, vh / 2, 1.5); $('#zout').onclick = () => zoomAt(vw / 2, vh / 2, 1 / 1.5); $('#zhome').onclick = () => { goHome(); userMoved = false; };
+  $('#zin').onclick = () => zoomAt(vw / 2, vh / 2, 1.5); $('#zout').onclick = () => { if (atZoomOutLimit()) { location.href = window.MAPNAV.up; return; } zoomAt(vw / 2, vh / 2, 1 / 1.5); }; $('#zhome').onclick = () => { goHome(); userMoved = false; };
   // embedded in a blog post: offer a way out to the full-screen page (a framed map is cramped on a phone)
   let framed = false; try { framed = self !== top; } catch (e) { framed = true; }
   if (framed) { $('#zfull').hidden = false; $('#zfull').onclick = () => open(location.href, '_blank', 'noopener'); }
@@ -640,6 +640,9 @@
   }
   addEventListener('resize', resize);
 
+  // on a state's map, zooming out past the whole state goes up to the map of the West (west/js/nav.js sets MAPNAV)
+  const atZoomOutLimit = () => !!(window.MAPNAV && window.MAPNAV.up) && cam.z <= zMin * 1.02;
+  setInterval(() => { if (!(window.MAPNAV && window.MAPNAV.up)) return; const t = atZoomOutLimit() ? 'Zoom out to the map of the West' : 'Zoom out', b = $('#zout'); if (b.title !== t) { b.title = t; b.setAttribute('aria-label', t); b.classList.toggle('up', atZoomOutLimit()); } }, 250);
   function updateScale() {
     const targetPx = 110, km = targetPx / (cam.z * T) * KM_PER_TILE, mi = km / 1.609;
     const nice = [1, 2, 5, 10, 20, 50, 100, 200].reduce((a, b) => Math.abs(b - mi) < Math.abs(a - mi) ? b : a);
