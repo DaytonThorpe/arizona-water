@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="west/west.css?v=5">
+<link rel="stylesheet" href="west/west.css?v=6">
 </head>
 <body>
 <div id="app">
@@ -77,11 +77,11 @@
     ca: ['west/data/ca.js', 'west/content/ca.js'], nm: ['west/data/nm.js', 'west/content/nm.js'], ut: ['west/data/ut.js', 'west/content/ut.js'], id: ['west/data/id.js', 'west/content/id.js'], mt: ['west/data/mt.js', 'west/content/mt.js'], nv: ['west/data/nv.js', 'west/content/nv.js'] };
   const id = (new URLSearchParams(location.search).get('s') || 'west').toLowerCase();
   const files = (REG[id] || REG.west).concat(['west/js/terrain.js', 'west/js/app.js']);
-  const V = '13';
+  const V = '14';
   // a link from each water map to the same place on the electricity map, shown at the top of the side panel
   const NAMES = { az: 'Arizona', ca: 'California', co: 'Colorado', id: 'Idaho', mt: 'Montana', nv: 'Nevada', nm: 'New Mexico', ut: 'Utah' };
   const power = NAMES[id] ? ['power/?s=' + id, NAMES[id] + '\'s electricity map'] : ['power/', 'Electricity map of the West'];
-  const powerLink = () => { if (window.MAPCONTENT) window.MAPCONTENT.homeTop = `<a class="btn powerlink" href="${power[0]}"><span>${power[1]} &rarr;</span><small>Power plants, power lines, fuel and pollution</small></a>`; };
+  const powerLink = () => { if (window.MAPCONTENT) window.MAPCONTENT.homeTop = `<a class="btn maplink topower" href="${power[0]}"><span>${power[1]} &rarr;</span><small>Power plants, power lines, fuel and pollution</small></a>`; };
   (function next(i) { if (i >= files.length) return; if (files[i] === 'west/js/app.js') powerLink(); const s = document.createElement('script'); s.src = files[i] + '?v=' + V; s.onload = () => next(i + 1); s.onerror = () => { document.getElementById('loading').textContent = 'Could not load the map.'; }; document.body.appendChild(s); })(0);
 })();
 </script>

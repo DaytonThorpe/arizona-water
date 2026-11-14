@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
-<link rel="stylesheet" href="../west/west.css?v=5">
+<link rel="stylesheet" href="../west/west.css?v=6">
 <link rel="stylesheet" href="power.css?v=1">
 </head>
 <body>
@@ -20,7 +20,7 @@
 
   <header id="hud">
     <div class="plate title">
-      <a id="navWest" href="../" hidden>&#9666; Water map</a>
+      <a id="navWest" href="?s=west" hidden>&#9666; The West</a>
       <h1>Arizona Power</h1>
       <p>Where it comes from. Where it goes.</p>
     </div>
@@ -71,12 +71,16 @@
     az: ['../data.js', '../content.js', 'data/az.js', 'content/kit.js', 'content/az.js'] };
   W.forEach(s => REG[s] = ['../west/data/' + s + '.js', '../west/content/' + s + '.js', 'data/' + s + '.js', 'content/kit.js', 'content/' + s + '.js']);
   const id = (new URLSearchParams(location.search).get('s') || 'west').toLowerCase();
-  // the overview links back to the water map; a state links back to the overview
+  // a state links back to the overview (the overview has no link back, like the water map's)
   const nav = document.getElementById('navWest');
-  if (id === 'west' || !REG[id]) { nav.href = '../'; nav.innerHTML = '&#9666; Water map'; } else { nav.href = '?s=west'; nav.innerHTML = '&#9666; All states'; }
+  nav.href = '?s=west'; nav.innerHTML = '&#9666; The West';
+  // the button to the same place on the water map, at the top of the side panel; the water map has the mirror image
+  const NAMES = { az: 'Arizona', ca: 'California', co: 'Colorado', id: 'Idaho', mt: 'Montana', nv: 'Nevada', nm: 'New Mexico', ut: 'Utah' };
+  const water = NAMES[id] ? ['../?s=' + id, NAMES[id] + '\'s water map'] : ['../', 'Water map of the West'];
+  const mapLink = () => { if (window.MAPCONTENT) window.MAPCONTENT.homeTop = `<a class="btn maplink towater" href="${water[0]}"><span>${water[1]} &rarr;</span><small>Rivers, dams, canals, farms and groundwater</small></a>`; };
   const files = (REG[id] || REG.west).concat(['../west/js/terrain.js', '../west/js/app.js']);
-  const V = '5';
-  (function next(i) { if (i >= files.length) return; const s = document.createElement('script'); s.src = files[i] + '?v=' + V; s.onload = () => next(i + 1); s.onerror = () => { document.getElementById('loading').textContent = 'Could not load the map.'; }; document.body.appendChild(s); })(0);
+  const V = '6';
+  (function next(i) { if (i >= files.length) return; if (files[i] === '../west/js/app.js') mapLink(); const s = document.createElement('script'); s.src = files[i] + '?v=' + V; s.onload = () => next(i + 1); s.onerror = () => { document.getElementById('loading').textContent = 'Could not load the map.'; }; document.body.appendChild(s); })(0);
 })();
 </script>
 

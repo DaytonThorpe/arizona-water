@@ -17,8 +17,10 @@
 @media (min-width: 821px) and (min-height: 521px) {
   #hud:has(#navWest:not([hidden])) ~ #layers { top: 110px; }
 }
-/* the link from a water map to its electricity map, at the top of the side panel */
-.btn.powerlink { display: block; margin: 10px 0 14px; padding: 8px 11px; background: var(--ink); color: var(--paper); text-decoration: none; }
-.btn.powerlink:hover, .btn.powerlink:focus-visible { background: #43394a; }
-#panelBody .btn.powerlink span { display: block; color: #ffe04a; font-size: 12px; letter-spacing: .03em; }
-#panelBody .btn.powerlink small { display: block; margin-top: 2px; font: 12.5px/1.35 var(--body); color: #e9dfc6; }
+/* the button between the water map and the electricity map, at the top of the side panel: the same on both, in each map's accent colour */
+.btn.maplink { display: block; margin: 10px 0 14px; padding: 8px 11px; background: var(--ink); color: var(--paper); text-decoration: none; }
+.btn.maplink:hover, .btn.maplink:focus-visible { background: #43394a; }
+#panelBody .btn.maplink span { display: block; font-size: 12px; letter-spacing: .03em; }
+#panelBody .btn.maplink.topower span { color: #ffe04a; }
+#panelBody .btn.maplink.towater span { color: #9fd0ff; }
+#panelBody .btn.maplink small { display: block; margin-top: 2px; font: 12.5px/1.35 var(--body); color: #e9dfc6; }

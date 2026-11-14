@@ -99,7 +99,7 @@ window.POWERKIT = {
     //      riverLede, tribeLede, exploreHint (optional) }
     K.finish = function (c) {
       window.MAPDATA = Object.assign({}, BASE, {
-        region: cfg.id + '-power', canals: [], basins: [], golf: [], amaHist: {},
+        region: cfg.id === 'west' ? 'west' : cfg.id + '-power', canals: [],   // 'west' tells the engine this is the overview, with no link back basins: [], golf: [], amaHist: {},
         amas: territories.map(t => ({ n: t.n, k: t.k, r: t.r })),
         plants: P.plants,
         netLines: P.lines.concat(P.pipes.map(p => ({ k: 'gas', n: p.n, t: p.t, l: p.l }))),
