@@ -4,7 +4,7 @@
    matches each state page; 2024 sales and net flows are from the EIA State Electricity Profiles, Table 10, as on each state page. */
 (() => {
   const K = window.POWERKIT.begin({ id: 'west', st: '', name: 'the West', util: {},
-    lineLede: { '500': 'The backbone of the western grid. Lines at 500 kilovolts carry the output of large power plants between states.' },
+    lineLede: { '500': 'The backbone of the western grid. Lines at 500 kilovolts carry the output of large power plants between states. Like most of the grid, they carry alternating current.' },
     pipeLede: 'An interstate pipeline that carries natural gas at high pressure from the gas fields of the Rockies, New Mexico, Texas and Canada to power plants and cities.' });
   const { OSM, SRC_INV, SRC_PIPES } = K;
   const S = {
@@ -123,7 +123,7 @@
     { title: 'Coal, and the plants that closed', text: 'Coal made 11% in 2025, mostly in Utah, Colorado, Montana, Arizona and New Mexico. Faded markers are coal plants that have closed. Colstrip, in Montana, made a third of that state\'s power.', view: 'home', select: 'colstrip', layers: ['plants', 'closed', 'lines'] },
     { title: 'Wind on the plains, water in the north', text: 'Wind made 11% and dams 10%. Wind farms made 36% of New Mexico\'s power, and SunZia, the largest wind farm in the country, was finished there in 2026. Dams made 44% of Idaho\'s.', box: [-110.5, 31.3, -102.0, 37.3], select: 'sunzia', layers: ['plants', 'rivers', 'lines'] },
     { title: 'Two nuclear plants', text: 'Palo Verde in Arizona and Diablo Canyon in California made 9% of the eight states\' electricity. Palo Verde alone made 31 terawatt-hours, more than all of Idaho\'s or Montana\'s power plants.', box: [-122.0, 32.0, -110.5, 37.0], select: 'paloverde', layers: ['plants', 'lines'] },
-    { title: 'Moving power between states', text: 'Yellow lines carry 500 kilovolts and orange ones are direct-current lines. In 2024 Arizona sent out 19.7 terawatt-hours more than it brought in, and California brought in 53.4 terawatt-hours more than it sent out.', box: [-122.5, 32.5, -111.0, 41.5], select: 'pdci', layers: ['plants', 'lines'] },
+    { title: 'Moving power between states', text: 'The thick lines all run at about 500 kilovolts. Yellow ones carry alternating current, like the rest of the grid. Orange ones carry direct current, which loses less power over long distances, and run between just two points. In 2024 Arizona sent out 19.7 terawatt-hours more than it brought in, and California brought in 53.4 terawatt-hours more than it sent out.', box: [-122.5, 32.5, -111.0, 41.5], select: 'pdci', layers: ['plants', 'lines'] },
     { title: 'Now pick a state', text: 'Each state has its own map, with its plants, utilities, users and a tour. Click a state on the map or in the panel.', view: 'home', home: true, layers: ['plants', 'lines', 'closed', 'rivers'] },
   ];
 

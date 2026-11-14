@@ -79,11 +79,11 @@ window.POWERKIT = {
     }
 
     const LINECLASS = {
-      '500': ['500 kV line', 'The backbone of the grid. A 500-kilovolt line can carry the output of a large power plant across the state.'],
+      '500': ['500 kV line', 'The backbone of the grid. A 500-kilovolt line can carry the output of a large power plant across the state. Like most of the grid, it carries alternating current.'],
       '345': ['345 kV line', 'A long-distance line. Lines at 345 kilovolts carry power from large plants to cities and between states.'],
       '230': ['230 kV line', 'A regional line. Lines at 230 kilovolts move power around a metro area and out to large substations.'],
       '115': ['115 to 161 kV line', 'A local transmission line. It feeds the substations that serve towns and neighborhoods.'],
-      dc: ['High-voltage direct current line', 'A direct-current line. Direct current loses less power over very long distances than the alternating current used on the rest of the grid.'],
+      dc: ['High-voltage direct current line', 'A direct-current line. The rest of the grid carries alternating current. Direct current loses less power over very long distances, so it is used for a few long lines that run between just two points, often at about 500 kilovolts.'],
     };
     Object.entries(cfg.lineLede || {}).forEach(([k, v]) => LINECLASS[k][1] = v);
     const PIPELEDE = cfg.pipeLede || 'A pipeline that carries natural gas at high pressure. Gas-fired power plants are built on or near lines like this one.';
