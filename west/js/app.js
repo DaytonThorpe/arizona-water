@@ -247,6 +247,7 @@
     if (z > .5) { ctx.strokeStyle = 'rgba(43,36,48,.35)'; ctx.lineWidth = lw(1); ctx.setLineDash([lw(2), lw(4)]); for (const l of D.countyLines) { path(l.map(v => v * T)); ctx.stroke(); } ctx.setLineDash([]); }
     ctx.strokeStyle = 'rgba(43,36,48,.5)'; ctx.lineWidth = lw(1.2); for (const l of borderLines) { path(l); ctx.stroke(); }
     ctx.strokeStyle = '#2b2430'; ctx.lineWidth = lw(2.6); for (const o of outlines) { path(o); ctx.closePath(); ctx.stroke(); }
+    if (C.stateClickGo && hover && hover.type === 'state' && hover.st && (C.stateCards[hover.ref] || {}).go) { ctx.imageSmoothingEnabled = false; ctx.drawImage(washFor(hover.st), 0, 0, WW, WH); }
 
     // rivers: dark casing, blue body, lighter moving dashes = direction of flow
     if (on.rivers) {
@@ -376,7 +377,7 @@
       if (tile.built <= .12) return { type: 'spot', tx, ty, tile, wx, wy, name: 'Farm fields', sub: here || 'What\'s here?' };
     }
     if (on.cities && tile.built > .12) { const f = near(['city', 'town'], 22); if (f) return { type: 'feature', ref: f, name: 'Near ' + f.name, sub: 'Built-up area', soft: true }; }
-    if (C.stateCards && tile.st) { const s = D.states[tile.st - 1]; return { type: 'state', ref: s.id, name: s.n, sub: C.stateCards[s.id] && C.stateCards[s.id].go ? (C.stateHint || 'Click for its water story') : 'Coming soon' }; }
+    if (C.stateCards && tile.st) { const s = D.states[tile.st - 1]; return { type: 'state', ref: s.id, st: tile.st, name: s.n, sub: C.stateCards[s.id] && C.stateCards[s.id].go ? (C.stateHint || 'Click for its water story') : 'Coming soon' }; }
     return { type: 'spot', tx, ty, tile, wx, wy, name: tile.inAZ && C.spot ? 'What\'s here?' : '', sub: '' };
   }
 
@@ -468,6 +469,21 @@
     h += srcs(C.spot.sources);
     selected = { type: 'spot' }; setPanel(h);
   }
+  // the overviews: clicking a state zooms toward it, then opens that state's map
+  function openState(id, go) {
+    const s = D.states.find(s => s.id === id), url = '?s=' + go;
+    if (!s || reduceMotion) { location.search = url; return; }
+    fly = { x0: cam.x, y0: cam.y, z0: cam.z, x: s.c[0] * T, y: s.c[1] * T, z: cam.z * 2.4, t0: performance.now(), ms: 450 };
+    setTimeout(() => { location.search = url; }, 400);
+  }
+  // the overviews: a pale wash over the state under the pointer, so it reads as one clickable thing
+  let stateWash = null, stateWashId = null;
+  function washFor(st) {
+    if (stateWashId === st) return stateWash;
+    const c = document.createElement('canvas'); c.width = D.gw; c.height = D.gh; const x = c.getContext('2d'), im = x.createImageData(D.gw, D.gh);
+    for (let ty = 0; ty < D.gh; ty++) for (let tx = 0; tx < D.gw; tx++) { const t = G.tile(tx, ty); if (t && t.st === st) { const i = (ty * D.gw + tx) * 4; im.data[i] = im.data[i + 1] = im.data[i + 2] = 255; im.data[i + 3] = 105; } }
+    x.putImageData(im, 0, 0); stateWash = c; stateWashId = st; return c;
+  }
   function select(hh) {
     if (!hh) return;
     if (hh.type === 'feature') return showFeature(hh.ref, { fly: !hh.soft });
@@ -475,7 +491,7 @@
     selected = hh;
     if (hh.type === 'plant') { const c = C.plantCard(hh.ref); showGeneric(c, c.kind, c.icon, c.title || hh.ref.n); return; }
     if (hh.type === 'line') { const c = C.lineCard(hh.ref); showGeneric(c, c.kind, c.icon, c.title || hh.name); return; }
-    if (hh.type === 'state') { const c = C.stateCards[hh.ref] || C.stateCards._default; showGeneric(c, c.go ? 'State' : 'Coming soon', 'info', hh.name); return; }
+    if (hh.type === 'state') { const c = C.stateCards[hh.ref] || C.stateCards._default; if (c.go && C.stateClickGo) return openState(hh.ref, c.go); showGeneric(c, c.go ? 'State' : 'Coming soon', 'info', hh.name); return; }
     if (hh.type === 'river') { const c = C.rivers[hh.ref]; showGeneric(c || C.rivers._default, hh.river.dry ? 'Dry riverbed' : 'River', 'river', hh.name); }
     else if (hh.type === 'canal') { const c = C.canals[hh.ref] || C.canals._default; showGeneric(c, c.kind || 'Canal', hh.ref === 'cap' ? 'pump' : c.icon || 'canal', c.title || hh.name); if (hh.ref === 'cap') { const el = document.createElement('div'); el.innerHTML = `<p><button class="btn" data-feat="mead">Try the Lake Mead shortage slider</button></p>`; body.insertBefore(el, body.querySelector('.srcs')); } }
     else if (hh.type === 'ama') showGeneric(C.amas[hh.ref] || (hh.poly && hh.poly.k && C.amas['_' + hh.poly.k]) || C.amas[/ INA$/.test(hh.ref) ? '_ina' : '_default'], hh.sub, 'aquifer', hh.name);
@@ -501,7 +517,8 @@
       ${B.notesBelow && B.afNote ? `<div class="gcap units">${B.afNote}</div>` : ''}
       ${B.body}
       <h3>Explore</h3><p style="font-size:13.5px">${C.exploreHint || 'Drag to pan, scroll or pinch to zoom, and click anything: a dam, a field, a canal, or bare desert.'}</p>`;
-    if (C.statesNav) h += `<h3>${C.statesNav.title}</h3><div class="chips">${C.statesNav.items.map(s => s[2] ? `<button class="chip go" data-go="${s[0]}">${esc(s[1])} &rarr;</button>` : `<button class="chip" disabled>${esc(s[1])} (soon)</button>`).join('')}</div>`;
+    if (C.statesNav && C.statesNav.cols) h += `<h3>${C.statesNav.title}</h3><div class="staterows"><div class="sthead"><span></span>${C.statesNav.cols.map(c => `<span>${c}</span>`).join('')}<i></i></div>${C.statesNav.items.map(s => `<button class="staterow" data-go="${s[0]}"><b>${esc(s[1])}</b>${(s[3] || []).map(v => `<span>${v}</span>`).join('')}<i>&rarr;</i></button>`).join('')}</div>${C.statesNav.note ? `<div class="gcap">${C.statesNav.note}</div>` : ''}`;
+    else if (C.statesNav) h += `<h3>${C.statesNav.title}</h3><div class="chips">${C.statesNav.items.map(s => s[2] ? `<button class="chip go" data-go="${s[0]}">${esc(s[1])} &rarr;</button>` : `<button class="chip" disabled>${esc(s[1])} (soon)</button>`).join('')}</div>`;
     const groups = C.browse;
     for (const g of groups) h += `<h3>${g[0]}</h3><div class="chips">${g[1].map(id => featById[id] ? `<button class="chip" data-feat="${id}">${esc(featById[id].short || featById[id].name)}</button>` : '').join('')}</div>`;
     h += `<h3>About the data</h3>${C.about}`;

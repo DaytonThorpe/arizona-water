@@ -118,7 +118,7 @@ window.POWERKIT = {
           { id: 'plants', label: 'Power plants', icon: 'gasplant', on: true },
           { id: 'lines', label: 'Transmission', icon: 'pylon', on: true },
           { id: 'pipes', label: 'Gas pipelines', icon: 'pipe', on: true },
-          { id: 'cities', label: 'Power users', icon: 'city', on: true },
+          { id: 'cities', label: 'Big users', icon: 'city', on: true },
           { id: 'emit', label: 'CO2', icon: 'puff', on: false },
           { id: 'closed', label: 'Closed plants', icon: 'retired', on: true },
           { id: 'planned', label: 'Planned plants', icon: 'planned', on: false },
@@ -145,7 +145,7 @@ window.POWERKIT = {
           nuclear: ['plants', 'nuclear', 'Nuclear plant'], coal: ['plants', 'coal', 'Coal plant'], gas: ['plants', 'gasplant', 'Natural gas plant'], solar: ['plants', 'solar', 'Solar farm'],
           wind: ['plants', 'wind', 'Wind farm'], hydro: ['plants', 'hydro', 'Dam and hydropower'], pumped: ['plants', 'hydro', 'Pumped storage'], battery: ['plants', 'battery', 'Battery storage'],
           geo: ['plants', 'geo', 'Geothermal plant'], bio: ['plants', 'power', 'Biomass plant'], closed: ['closed', 'retired', 'Closed plant'],
-          hub: ['lines', 'substation', 'Grid hub'], fuel: ['pipes', 'pipe', 'Fuel supply'], user: ['cities', 'city', 'Power user'],
+          hub: ['lines', 'substation', 'Grid hub'], fuel: ['pipes', 'pipe', 'Fuel supply'], user: ['cities', 'city', 'Big user'],
           info: ['plants', 'info', 'Good to know'], city: ['cities', 'city', 'City'], mine: ['cities', 'mine', 'Mine'], fab: ['cities', 'fab', 'Chip factory'], datacenter: ['cities', 'datacenter', 'Data centers'],
           umine: ['pipes', 'mine', 'Uranium mine'], coalmine: ['closed', 'mine', 'Closed coal mine'], coalmineop: ['pipes', 'mine', 'Coal mine'], gasfield: ['pipes', 'pipe', 'Oil and gas field'],
           plannedp: ['planned', 'planned', 'Planned plant'],
@@ -191,7 +191,7 @@ window.POWERKIT = {
         riverLabels: WATER.riverLabels || [], neighbors: WATER.neighbors || [],
         features: c.features, browse: c.browse, hud: c.hud, budget: c.budget,
         statesNav: c.statesNav === undefined ? POWERKIT.statesNav(cfg.id) : c.statesNav,
-        stateCards: c.stateCards, stateLabels: c.stateLabels, stateHint: c.stateHint,   // used by the all-states overview
+        stateCards: c.stateCards, stateLabels: c.stateLabels, stateHint: c.stateHint, stateClickGo: c.stateClickGo,   // used by the all-states overview
         plantMinZ: c.plantMinZ, plantSize: c.plantSize,   // optional: when each plant appears and how big it is drawn
         spot: {
           rulesTitle: 'Who delivers electricity here',
@@ -223,5 +223,5 @@ window.POWERKIT = {
   // chips in the home panel that switch to another state's electricity map; a state appears once its page exists
   LIVE: ['az', 'ca', 'co', 'id', 'mt', 'nv', 'nm', 'ut'],
   NAMES: { az: 'Arizona', ca: 'California', co: 'Colorado', id: 'Idaho', mt: 'Montana', nv: 'Nevada', nm: 'New Mexico', ut: 'Utah' },
-  statesNav(self) { const items = [['west', 'All states', 1]].concat(this.LIVE.filter(s => s !== self).map(s => [s, this.NAMES[s], 1])); return { title: 'Electricity in other states', items }; },
+  statesNav(self) { const items = [['west', 'All states', 1]].concat(this.LIVE.filter(s => s !== self).map(s => [s, this.NAMES[s], 1])); return { title: 'Other states', items }; },
 };

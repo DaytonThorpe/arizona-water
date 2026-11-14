@@ -76,7 +76,7 @@
   const st = (pop, maf, sw, irr, ps, acres, fact, src, go, name) => ({
     lede: fact, go,
     stats: [[maf + 'M AF', 'fresh water withdrawn per year (2015)'], [pop, 'people (2025)'], [irr + '%', 'of withdrawals go to irrigation'], [ps + '%', 'go to public water supply'], [sw + '% / ' + (100 - sw) + '%', 'from rivers and lakes / from wells'], [acres, 'irrigated acres']],
-    body: (go ? `<p><button class="btn go" data-go="${go}">Explore ${name}'s water &rarr;</button></p>` : `<p><i>A detailed map of ${name} is on the way.</i></p>`)
+    body: (go ? `<p><button class="btn go" data-go="${go}">Open ${name}'s water map &rarr;</button></p>` : `<p><i>A detailed map of ${name} is on the way.</i></p>`)
       + '<div class="gcap">Withdrawals count water each time it is taken from a river or well. Water that runs off a field and is used again downstream is counted twice, which raises the totals for headwater states.</div>',
     sources: [S.usgs, S.census].concat(src ? [src] : []),
   });
@@ -96,7 +96,7 @@
 
   window.MAPCONTENT = {
     meta: { title: 'Water in the West: an explorable map', h1: 'Water in the West', tagline: 'Where it comes from. Where it goes.', aria: 'Interactive map of water in the western United States. Use the lists in the side panel to browse the same information without the map.', home: 'Show the whole West' },
-    features: F, stateCards, stateLabels: true,
+    features: F, stateCards, stateLabels: true, stateClickGo: true, stateHint: 'Open the water map',
     sprites: { lake: ['..bbbbbb..', '.bBbbbbBb.', 'bbbbBbbbbb', '.bbBbbbbb.', '..bbbbbb..'] },   // a quiet marker for a lake that is the subject itself
     kinds: { well: ['farms', 'well', 'Groundwater'], pump: ['reservoirs', 'pump', 'Pumping hub'], info: ['rivers', 'info', 'Good to know'] },
     layers: { canals: false, ground: false, golf: false, tribal: false, industry: false, cities: false },
@@ -133,8 +133,9 @@
       body: `<div class="note">All figures here are from the US Geological Survey's 2015 water-use data, the newest complete count that covers every state the same way. The nine states are the eight on this map plus Wyoming. State agencies count differently, so each state's own map uses that state's numbers.</div>
         <div class="note hot"><b>What is changing:</b> Lake Powell and Lake Mead, the two biggest reservoirs in the country, are each 27% full. From 2027, Arizona, California and Nevada together give up 1.25 million AF of Colorado River water a year.</div>`,
     },
-    statesNav: { title: 'Pick a state', items: [['az', 'Arizona', 1], ['co', 'Colorado', 1], ['ca', 'California', 1], ['nm', 'New Mexico', 1], ['ut', 'Utah', 1], ['id', 'Idaho', 1], ['mt', 'Montana', 1], ['nv', 'Nevada', 1]] },
-    exploreHint: 'Drag to pan, scroll or pinch to zoom. Click a state for its numbers, or click a dam, lake or river.',
+    statesNav: { title: 'Pick a state', cols: ['Withdrawn a year', 'People'], items: ['az', 'ca', 'co', 'id', 'mt', 'nv', 'nm', 'ut'].map(id => [id, { az: 'Arizona', ca: 'California', co: 'Colorado', id: 'Idaho', mt: 'Montana', nv: 'Nevada', nm: 'New Mexico', ut: 'Utah' }[id], 1, [stateCards[id].stats[0][0], stateCards[id].stats[1][0]]]),
+      note: 'Fresh water taken from rivers and wells in 2015, from the US Geological Survey, and people in 2025. Click a state, here or on the map, to open its water map.' },
+    exploreHint: 'Drag to pan, scroll or pinch to zoom. Click a state to open its water map, or click a dam, lake or river.',
     browse: [
       ['The Colorado River', ['powell', 'leesferry', 'mead']],
       ['Other rivers and lakes', ['butte', 'fortpeck', 'gsl', 'klamath']],

@@ -57,3 +57,13 @@ body[data-topic=power] .place summary { color: #ffe04a; }
   #hud .title .up { padding: 4px 0; }
   #hud .title .up::before { font-size: 14px; }
 }
+/* the overviews' list of states: one row per state with two figures; the whole row opens that state's map */
+.staterows { display: grid; gap: 4px; margin: 4px 0 6px; }
+.sthead, .staterow { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1.15fr) 14px; gap: 8px; align-items: center; }
+.sthead { padding: 0 9px; font: 10px var(--pixel); letter-spacing: .04em; text-transform: uppercase; color: var(--ink2); }
+.staterow { width: 100%; padding: 7px 9px; background: var(--paper2); border: 2px solid var(--ink); text-align: left; font: 13.5px/1.25 var(--body); color: var(--ink); cursor: pointer; box-shadow: 2px 2px 0 rgba(43,36,48,.35); }
+.staterow b { font-weight: 600; }
+.staterow span { font-variant-numeric: tabular-nums; }
+.staterow i { font-style: normal; text-align: right; }
+.staterow:hover, .staterow:focus-visible { background: #fff7d6; }
+@media (max-width: 820px), (max-height: 520px) { .staterow { padding: 10px 9px; } }
