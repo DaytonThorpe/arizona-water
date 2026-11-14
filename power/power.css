@@ -1,0 +1,5 @@
+/* Electricity map: the overview pictogram uses lightning bolts instead of drops. */
+.picto.bolt .drop { border: 0; border-radius: 0; transform: none; clip-path: polygon(58% 0, 12% 56%, 44% 56%, 34% 100%, 88% 40%, 56% 40%, 72% 0); }
+.picto.bolt .drop.tiny { clip-path: none; border: 2px dotted var(--ink2); border-radius: 50%; }
+.picto.bolt .drop.tiny b { border-radius: 0; transform: none; clip-path: polygon(58% 0, 12% 56%, 44% 56%, 34% 100%, 88% 40%, 56% 40%, 72% 0); }
+.statgrid.data .stat { background: #efe6c8; }
