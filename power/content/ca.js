@@ -112,7 +112,7 @@
     body: '<p class="gcap">2025: total 267.7 TWh, of which 205.7 TWh generated in California and 62.0 TWh imported. 2024 federal balance: 273.7 TWh supplied, of which 214.2 TWh generated in California, 53.4 TWh net from other states and 6.0 TWh from Mexico and Canada. Sources: <a href="https://www.energy.ca.gov/data-reports/energy-almanac/california-electricity-data/2025-total-system-electric-generation" target="_blank" rel="noopener">California Energy Commission, 2025</a> &middot; <a href="https://www.eia.gov/electricity/state/california/" target="_blank" rel="noopener">EIA California Electricity Profile, 2024</a> &middot; <a href="https://www.eia.gov/electricity/data/eia861m/" target="_blank" rel="noopener">EIA small-scale solar</a> &middot; <a href="https://www.eia.gov/electricity/data/state/" target="_blank" rel="noopener">EIA state history</a></p>',
   };
   const HUD = [['268 TWh', 'supplied to California\'s grid, 2025'], ['23%', 'of it imported'], ['50,335 MW', '2026 peak on the main state grid']];
-  const ABOUT = K.aboutStd('Where a card gives 2025 output or fuel deliveries, the figure is our sum of federal plant reports (EIA-923). California has about 2,500 plants of 1 megawatt or more on this map; the small ones appear as you zoom in. Some plants that the federal list splits into phases are shown as one (for example The Geysers, Alta Wind and Ivanpah), and where a card\'s table covers only part of a site the card says so. Named 500-kilovolt lines were not available for California when this was built, so lines are described by the substations at their ends, and the Pacific DC Intertie is drawn as an ordinary 500-kilovolt line. Utility areas show who owns the local wires; in much of the state a separate community agency buys the power. Federal power agencies, generators and community agencies that the source draws as large regions are left out. The Palo Verde nuclear plant in Arizona and the Intermountain plant in Utah are outside the map; cards mention them where they matter.');
+  const ABOUT = K.aboutStd('Where a card gives 2025 output or fuel deliveries, the figure is our sum of federal plant reports (EIA-923). California has about 2,500 plants of 1 megawatt or more on this map; the small ones appear as you zoom in. Some plants that the federal list splits into phases are shown as one (for example The Geysers, Alta Wind and Ivanpah), and where a card\'s table covers only part of a site the card says so. Utility areas show who owns the local wires; in much of the state a separate community agency buys the power. Federal power agencies, generators and community agencies that the source draws as large regions are left out. The Palo Verde nuclear plant in Arizona and the Intermountain plant in Utah are outside the map; cards mention them where they matter.');
   const FEATURES = [], add = o => FEATURES.push(o);
   const OTC = 'Once-through cooling means drawing sea water through the plant and returning it warmer. A 2010 state policy requires coastal plants to stop or sharply cut the practice, because the intakes kill fish and other sea life.';
 
@@ -332,7 +332,7 @@
   add({ id: 'sylmar', kind: 'hub', lon: -118.481, lat: 34.312, name: 'Sylmar: the south end of the Pacific DC Intertie', short: 'Pacific DC Intertie', tier: 2,
     lede: 'A direct-current line from the Columbia River in Oregon ends at this converter station in Los Angeles. Direct current loses less power over long distances than the alternating current used on the rest of the grid.',
     stats: [['846 miles', 'length of the line, which crosses Nevada east of the Sierra'], ['3,100 MW', 'power it can carry'], ['1970', 'year the first phase was finished']],
-    body: '<p>The Los Angeles Department of Water and Power manages the station. On this map the line is the one that runs from the Oregon border down through Nevada and the Owens Valley.</p>',
+    body: '<p>The Los Angeles Department of Water and Power manages the station. On this map it is the orange direct-current line that runs from the Oregon border down through Nevada and the Owens Valley.</p>',
     sources: [S.wPdci] });
   add({ id: 'adelanto', kind: 'hub', lon: -117.438, lat: 34.551, name: 'Adelanto: the direct-current line from Utah', short: 'Line from Utah', tier: 3,
     lede: 'A direct-current line from the Intermountain power plant near Delta, Utah, ends here. For forty years it carried coal power to Los Angeles and other Southern California cities.',
@@ -467,7 +467,32 @@
     'Questar Southern Trails Line': { lede: 'An interstate pipeline drawn in federal map data from northern Arizona to the California desert.', sources: [S.pipes] },
     'Northwest Pipeline': { lede: 'An interstate pipeline in Oregon and Idaho. On this map it does not enter California.', sources: [S.pipes] },
   };
-  const LINECARDS = [];   // LINECARDS_PLACEHOLDER
+  // Named lines: names and routes are from OpenStreetMap. Figures reuse sources already cited on the hub cards.
+  const tenwest = ['Ten West Link briefing to California ISO, 31 Jul 2024', 'https://www.caiso.com/documents/presentation-dcrt-transmission-development-forum-jul-31-2024.pdf'];
+  const LINECARDS = [
+    [/Celilo - Sylmar/i, { title: 'Pacific DC Intertie (Celilo to Sylmar)', lede: 'A direct-current line from the Columbia River in Oregon to Sylmar in Los Angeles. Direct current loses less power over long distances than the alternating current used on the rest of the grid.',
+      stats: [['846 miles', 'length of the line'], ['3,100 MW', 'power it can carry'], ['1970', 'year the first phase was finished']],
+      body: '<p>It runs east of the Sierra Nevada through Nevada and the Owens Valley. OpenStreetMap lists the Bonneville Power Administration as operator of the northern part and the Los Angeles Department of Water and Power of the southern part.</p>', sources: [S.wPdci, OSM] }],
+    [/Adelanto - Intermountain/i, { title: 'Intermountain direct-current line', lede: 'A direct-current line from the Intermountain power plant near Delta, Utah, to Adelanto. For forty years it carried coal power to Los Angeles and other Southern California cities. The plant is off this map.',
+      stats: [['488 miles', 'length of the line'], ['2,400 MW', 'power it can carry'], ['840 MW', 'output of the gas units that began running at Intermountain in July 2025']], sources: [S.wP27, S.ipa, OSM] }],
+    [/Delaney-Colorado River/i, { title: 'Ten West Link (Delaney to Colorado River)', lede: 'The newest 500-kilovolt line between Arizona and California. It runs beside Interstate 10 from the Delaney substation near Tonopah, Arizona, to a substation near Blythe.',
+      stats: [['125 miles', 'length, of which 103.5 miles are in Arizona'], ['3,200 MW', 'what the wires can carry'], ['7 June 2024', 'date it was energized']], sources: [tenwest, OSM] }],
+    [/Los Banos - Gates|Gates - Midway/i, { lede: 'One of the three 500-kilovolt lines of Path 15, down the west side of the Central Valley. Path 15 is the main tie between the northern and southern halves of California\'s grid.',
+      stats: [['84 miles', 'length of the corridor'], ['Up to 5,400 MW', 'power the three lines can carry northward'], ['21 Dec 2004', 'date the third line was finished']], sources: [S.wP15, OSM] }],
+    [/Midway - Vincent|Midway - Whirlwind|Whirlwind - Vincent/i, { lede: 'One of the 500-kilovolt lines of Path 26, which climbs from the Midway substation west of Bakersfield over the mountains toward Los Angeles. It ties Pacific Gas and Electric\'s grid to Southern California Edison\'s.',
+      stats: [['3,700 MW', 'power the Path 26 lines can carry southward'], ['3,000 MW', 'power they can carry northward']], sources: [S.wP26, OSM] }],
+    [/Path 66|Malin|Captain Jack|Olinda/i, { lede: 'One of the 500-kilovolt lines from Oregon that enter California at Malin. Most of the power California imports from the Northwest arrives on them.',
+      stats: [['20.0 TWh', 'electricity California imported from the Northwest in 2025'], ['9.4 TWh', 'of that from wind farms, and 4.8 TWh from dams']], sources: [S.cec, OSM] }],
+    [/Diablo/i, { lede: 'A 500-kilovolt line that carries power from the Diablo Canyon nuclear plant inland to the substations of the Central Valley.',
+      stats: [['17.6 TWh', 'electricity Diablo Canyon generated in 2025, 8.5% of all generation in California']], sources: [S.cec, OSM] }],
+    [/Colorado River|Red Bluff|Devers/i, { lede: 'One of the 500-kilovolt lines along Interstate 10 between the Colorado River and the Los Angeles basin. They carry desert solar power and imports from Arizona.',
+      stats: [['42.0 TWh', 'electricity California imported from the Southwest in 2025']], sources: [S.cec, OSM] }],
+    [/Imperial Valley|Jacumba|Miguel|Suncrest/i, { lede: 'One of the 500-kilovolt lines that bring power west to San Diego from the Imperial Valley and Arizona.', sources: [OSM] }],
+    [/Mohave - /i, { lede: 'A 500-kilovolt line built to carry power from the Mohave coal plant at Laughlin, Nevada. The federal list shows the plant\'s last unit retired in 2012.', sources: [SRC_INV, OSM] }],
+    [/Adelanto|Victorville|Rinaldi|Toluca|Marketplace - McCullough|McCullough - Victorville/i, { lede: 'A line of the Los Angeles Department of Water and Power. The city utility brings power in on its own long lines from Oregon, Utah and Nevada, and runs its own grid.', sources: [S.e861, OSM] }],
+    [/Tesla|Vaca Dixon|Table Mountain|Metcalf|Moss Landing|Tracy|Round Mountain/i, { lede: 'One of the 500-kilovolt lines that tie the Bay Area and the Sacramento Valley into the grid\'s north-south backbone.', sources: [OSM] }],
+    [/Lugo|Vincent|Mira Loma|Serrano|Mesa|Rancho Vista|Antelope|Windhub|Valley/i, { lede: 'One of Southern California Edison\'s 500-kilovolt lines around the Los Angeles basin. They link the Tehachapi wind and solar farms and the lines from Nevada and Arizona to the cities.', sources: [OSM] }],
+  ];
 
   // ----------------------------------------------------------------- tour
   const LAY = ['plants', 'lines', 'pipes', 'cities', 'closed', 'rivers'];
