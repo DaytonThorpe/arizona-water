@@ -1,0 +1,11 @@
+{"minMW": 50, "states": ["AZ", "CA", "CO", "ID", "MT", "NM", "NV", "UT"], "hifld": false, "territories": false, "osm": ["az", "ca", "co", "id", "mt", "nm", "nv", "ut"],
+ "lineSimplify": 0.02, "pipeSimplify": 0.03, "pipeMinLen": 0.1, "pipeTypes": ["Interstate"],
+ "merge": [
+  ["^Gila River Power Block", 55306, "Gila River Power Station"], ["^Mesquite Generating Station Block", 55481, "Mesquite Generating Station"],
+  ["^Hoover Dam", 8902, "Hoover Dam"], ["^Chevelon Butte", 66001, "Chevelon Butte Wind Farm"],
+  ["^SunZia Wind", 66923, "SunZia Wind"],
+  ["^(Geysers Unit 5-20|Calistoga Power Plant|Sonoma California Geothermal|Aidlin Geothermal)", 286, "The Geysers (Calpine plants)"],
+  ["^(Salton Sea Power|CE Leathers|Del Ranch Company|Elmore Company|Vulcan-BN|CE Turbo)", 10759, "Salton Sea geothermal plants (CalEnergy)"],
+  ["^Alta Wind", 57282, "Alta Wind Energy Center"], ["^Ivanpah \\d", 57074, "Ivanpah Solar"], ["^Solar Star [12]$", 58388, "Solar Star"],
+  ["^Desert Sunlight \\d", 57993, "Desert Sunlight Solar Farm"], ["^Copper Mountain Solar", 58017, "Copper Mountain Solar"]
+ ]}

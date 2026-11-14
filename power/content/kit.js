@@ -108,7 +108,7 @@ window.POWERKIT = {
       window.MAPCONTENT = {
         meta: c.meta || { title: `${name} Power: an explorable map`, h1: `${name} Power`, tagline: 'Where it comes from. Where it goes.', aria: `Interactive map of ${poss} electricity system. Use the Places list in the side panel to browse the same information without the map.`, home: `Show all of ${name}` },
         night: true,
-        layerList: [
+        layerList: c.layerList || [
           { id: 'plants', label: 'Power plants', icon: 'gasplant', on: true },
           { id: 'lines', label: 'Transmission', icon: 'pylon', on: true },
           { id: 'pipes', label: 'Gas pipelines', icon: 'pipe', on: true },
@@ -185,6 +185,8 @@ window.POWERKIT = {
         riverLabels: WATER.riverLabels || [], neighbors: WATER.neighbors || [],
         features: c.features, browse: c.browse, hud: c.hud, budget: c.budget,
         statesNav: c.statesNav === undefined ? POWERKIT.statesNav(cfg.id) : c.statesNav,
+        stateCards: c.stateCards, stateLabels: c.stateLabels, stateHint: c.stateHint,   // used by the all-states overview
+        plantMinZ: c.plantMinZ, plantSize: c.plantSize,   // optional: when each plant appears and how big it is drawn
         spot: {
           rulesTitle: 'Who delivers electricity here',
           inside: n => `This spot is served by <b>${n}</b>.`, aboutBtn: n => `About ${n}`,
@@ -210,5 +212,5 @@ window.POWERKIT = {
   // chips in the home panel that switch to another state's electricity map; a state appears once its page exists
   LIVE: ['az', 'ca', 'co', 'id', 'mt', 'nv', 'nm', 'ut'],
   NAMES: { az: 'Arizona', ca: 'California', co: 'Colorado', id: 'Idaho', mt: 'Montana', nv: 'Nevada', nm: 'New Mexico', ut: 'Utah' },
-  statesNav(self) { const items = this.LIVE.filter(s => s !== self).map(s => [s, this.NAMES[s], 1]); return items.length ? { title: 'Electricity in other states', items } : null; },
+  statesNav(self) { const items = [['west', 'All states', 1]].concat(this.LIVE.filter(s => s !== self).map(s => [s, this.NAMES[s], 1])); return { title: 'Electricity in other states', items }; },
 };

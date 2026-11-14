@@ -25,8 +25,11 @@ EGRID_YEAR, INVENTORY = 2023, 'September 2026'
 REGIONS = {'az': ('data.js', 'AZDATA', ['AZ'])}
 for _id in ('co', 'ca', 'nm', 'ut', 'id', 'mt', 'nv'):
     REGIONS[_id] = (f'west/data/{_id}.js', 'MAPDATA', [_id.upper()])
+REGIONS['west'] = ('west/data/west.js', 'MAPDATA', [])   # the overview: see build/power/west.json
 # Optional per-region settings in build/power/<id>.json:
-#   {"merge": [[name pattern, plant id to keep, display name], ...], "minMW": 1}
+#   {"merge": [[name pattern, plant id to keep, display name], ...], "minMW": 1,
+#    "hifld": true (draw federal lines below 345 kV), "osm": [region ids whose OpenStreetMap line downloads to use; default this one],
+#    "territories": true, "lineSimplify": .004, "pipeSimplify": .006}   (degrees)
 AZ_MERGE = [[r'^Gila River Power Block', 55306, 'Gila River Power Station'], [r'^Mesquite Generating Station Block', 55481, 'Mesquite Generating Station'],
             [r'^Hoover Dam', 8902, 'Hoover Dam'], [r'^Chevelon Butte', 66001, 'Chevelon Butte Wind Farm']]
 
@@ -82,6 +85,7 @@ def main(region):
     from shapely.geometry import shape, box, LineString
     from shapely.ops import unary_union
     (L0, L1, B0, B1), GW, GH = base_ext(region)
+    CFG = config(region)
     frame = box(L0, B0, L1, B1)
     tx = lambda lon: round((lon - L0) / (L1 - L0) * GW, 2)
     ty = lambda lat: round((B1 - lat) / (B1 - B0) * GH, 2)
@@ -172,7 +176,7 @@ def main(region):
     # EIA lists some plants as several entries (power blocks, phases, the two halves of Hoover Dam) while EPA reports their output under one.
     # Merge each group into one plant: [name pattern, id to keep, display name]
     CFG = config(region); MERGE = CFG.get('merge', []); MINMW = CFG.get('minMW', 1)
-    out = [r for r in out if r['mw'] >= MINMW]
+    out = [r for r in out if r['mw'] >= MINMW and (not CFG.get('states') or r['st'] in CFG['states'])]
     for pat, keep, name in MERGE:
         grp = [r for r in out if re.search(pat, r['n'])]
         if len(grp) < 2: continue
@@ -201,7 +205,7 @@ def main(region):
     LINE_URL = 'https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Electric_Power_Transmission_Lines/FeatureServer/0/query'
     qs = urllib.parse.urlencode({'where': 'VOLTAGE>=115', 'geometry': f'{L0},{B0},{L1},{B1}', 'geometryType': 'esriGeometryEnvelope', 'inSR': 4326, 'spatialRel': 'esriSpatialRelIntersects',
                                  'outFields': 'VOLTAGE,OWNER,SUB_1,SUB_2,TYPE,STATUS,SOURCEDATE,VAL_DATE', 'outSR': 4326, 'f': 'geojson', 'geometryPrecision': 4})
-    gj = json.load(open(fetch(LINE_URL + '?' + qs, f'lines_hifld_{region}.geojson')))
+    gj = json.load(open(fetch(LINE_URL + '?' + qs, f'lines_hifld_{region}.geojson'))) if CFG.get('hifld', True) else {'features': []}
     lines = []; clean = lambda v: '' if not v or str(v).upper().startswith(('NOT AVAIL', 'UNKNOWN', 'TAP', 'UNK')) else str(v).strip().title()
     for ft in gj['features']:
         a = ft['properties']; kv = num(a['VOLTAGE']); g = shape(ft['geometry']).intersection(frame)
@@ -218,11 +222,14 @@ def main(region):
     # The federal file was last checked in 2017-2021. For the backbone (345 kV and above, and direct current) use OpenStreetMap when its
     # download is present: it is current, and it names each line. Fetch with:
     #   curl --data-urlencode 'data=[out:json][timeout:240];way["power"="line"]["voltage"](S,W,N,E);out tags geom;' https://overpass-api.de/api/interpreter > build/raw/power/lines_<id>.json
-    lp = os.path.join(RAW, f'lines_{region}.json')
-    if os.path.exists(lp):
+    lps = [os.path.join(RAW, f'lines_{r}.json') for r in CFG.get('osm', [region])]
+    lps = [lp for lp in lps if os.path.exists(lp)]
+    if lps:
         from shapely.ops import linemerge
-        groups = collections.defaultdict(list)
-        for w in json.load(open(lp))['elements']:
+        groups = collections.defaultdict(list); seen = set()
+        for w in (w for lp in lps for w in json.load(open(lp))['elements']):
+            if w['id'] in seen: continue
+            seen.add(w['id'])
             t = w.get('tags', {})
             try:
                 kv = max(float(v) for v in re.split(r'[;,/ ]+', t.get('voltage', '')) if v) / 1000
@@ -235,7 +242,7 @@ def main(region):
         lines = [l for l in lines if l['k'] in ('115', '230')]
         for (k, kv, name, op), geoms in groups.items():
             m = linemerge(geoms) if len(geoms) > 1 else geoms[0]
-            m = m.intersection(frame).simplify(.004)
+            m = m.intersection(frame).simplify(CFG.get('lineSimplify', .004))
             for part in (m.geoms if hasattr(m, 'geoms') else [m]):
                 if part.geom_type != 'LineString' or part.length < .01: continue
                 rec = {'k': k, 'kv': kv, 'l': flat(part.coords), 'osm': 1}
@@ -256,15 +263,18 @@ def main(region):
         except Exception:
             continue
         if g.is_empty or not g.intersects(frame): continue
-        a = dict(zip(fields, sf.record(i))); g = g.intersection(frame).simplify(.006)
+        a = dict(zip(fields, sf.record(i))); g = g.intersection(frame).simplify(CFG.get('pipeSimplify', .006))
         for part in (g.geoms if hasattr(g, 'geoms') else [g]):
-            if part.geom_type != 'LineString' or part.length < .02: continue
+            if part.geom_type != 'LineString' or part.length < CFG.get('pipeMinLen', .02): continue
+            if CFG.get('pipeTypes') and str(a.get('TYPEPIPE') or '').strip() not in CFG['pipeTypes']: continue
             pipes.append({'n': str(a.get('Operator') or '').strip(), 't': str(a.get('TYPEPIPE') or '').strip(), 'l': flat(part.coords)})
     print('pipes', len(pipes), collections.Counter(p['n'] for p in pipes).most_common(8), fields)
 
     # ---------------------------------------------------------------- service territories: HIFLD
     terr = []
-    if region == 'az':                                   # the pilot: utilities filed under Arizona, clipped to the frame
+    if not CFG.get('territories', True):
+        pass
+    elif region == 'az':                                 # the pilot: utilities filed under Arizona, clipped to the frame
         for st in REGIONS[region][2]:
             qs = urllib.parse.urlencode({'where': f"STATE='{st}'", 'outFields': 'NAME,TYPE,HOLDING_CO', 'outSR': 4326, 'f': 'geojson', 'geometryPrecision': 4})
             gj = json.load(open(fetch(TERR_URL + '?' + qs, f'territories_{st}.geojson')))

@@ -306,9 +306,9 @@
     }
     for (const p of plants) {
       p._s = null; if (p.feat || !on[plantLayer(p)]) continue;
-      if (z < (p.mw >= 400 ? 0 : p.mw >= 100 ? .4 : p.mw >= 20 ? .75 : 1.15)) continue;
+      if (z < (C.plantMinZ ? C.plantMinZ(p) : p.mw >= 400 ? 0 : p.mw >= 100 ? .4 : p.mw >= 20 ? .75 : 1.15)) continue;
       const [sx, sy] = w2s(p.x, p.y); if (sx < -30 || sy < -30 || sx > vw + 30 || sy > vh + 30) continue;
-      const s = sprite(C.plantIcon(p)), kk = p.mw >= 400 ? k : p.mw >= 60 || z > 1.6 ? 2 : 1, w = s.width * kk, h = s.height * kk;
+      const s = sprite(C.plantIcon(p)), kk = C.plantSize ? C.plantSize(p, z, k) : p.mw >= 400 ? k : p.mw >= 60 || z > 1.6 ? 2 : 1, w = s.width * kk, h = s.height * kk;
       const isSel = selected && selected.ref === p, isHov = hover && hover.ref === p;
       if (isSel || isHov) { ctx.fillStyle = isSel ? '#ffe04a' : 'rgba(255,255,255,.85)'; ctx.fillRect(Math.round(sx - w / 2 - 3), Math.round(sy - h / 2 - 3), w + 6, h + 6); ctx.strokeStyle = '#2b2430'; ctx.lineWidth = 2; ctx.strokeRect(Math.round(sx - w / 2 - 3), Math.round(sy - h / 2 - 3), w + 6, h + 6); }
       ctx.globalAlpha = C.plantAlpha ? C.plantAlpha(p, season) : 1; ctx.drawImage(s, Math.round(sx - w / 2), Math.round(sy - h / 2), w, h); ctx.globalAlpha = 1;
@@ -376,7 +376,7 @@
       if (tile.built <= .12) return { type: 'spot', tx, ty, tile, wx, wy, name: 'Farm fields', sub: here || 'What\'s here?' };
     }
     if (on.cities && tile.built > .12) { const f = near(['city', 'town'], 22); if (f) return { type: 'feature', ref: f, name: 'Near ' + f.name, sub: 'Built-up area', soft: true }; }
-    if (C.stateCards && tile.st) { const s = D.states[tile.st - 1]; return { type: 'state', ref: s.id, name: s.n, sub: C.stateCards[s.id] && C.stateCards[s.id].go ? 'Click for its water story' : 'Coming soon' }; }
+    if (C.stateCards && tile.st) { const s = D.states[tile.st - 1]; return { type: 'state', ref: s.id, name: s.n, sub: C.stateCards[s.id] && C.stateCards[s.id].go ? (C.stateHint || 'Click for its water story') : 'Coming soon' }; }
     return { type: 'spot', tx, ty, tile, wx, wy, name: tile.inAZ && C.spot ? 'What\'s here?' : '', sub: '' };
   }
 

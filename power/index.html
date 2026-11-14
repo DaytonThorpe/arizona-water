@@ -66,12 +66,16 @@
 <script>
 /* Same map engine as the water maps; this page loads the electricity data and content. ?s=az picks the region. */
 (() => {
-  const W = ['co', 'ca', 'nm', 'ut', 'id', 'mt', 'nv'], REG = { az: ['../data.js', '../content.js', 'data/az.js', 'content/kit.js', 'content/az.js'] };
+  const W = ['co', 'ca', 'nm', 'ut', 'id', 'mt', 'nv'], REG = {
+    west: ['../west/data/west.js', '../west/content/west.js', 'data/west.js', 'content/kit.js', 'content/west.js'],
+    az: ['../data.js', '../content.js', 'data/az.js', 'content/kit.js', 'content/az.js'] };
   W.forEach(s => REG[s] = ['../west/data/' + s + '.js', '../west/content/' + s + '.js', 'data/' + s + '.js', 'content/kit.js', 'content/' + s + '.js']);
-  const id = (new URLSearchParams(location.search).get('s') || 'az').toLowerCase();
-  document.getElementById('navWest').href = '../?s=' + (REG[id] ? id : 'az');   // back to the same state's water map
-  const files = (REG[id] || REG.az).concat(['../west/js/terrain.js', '../west/js/app.js']);
-  const V = '3';
+  const id = (new URLSearchParams(location.search).get('s') || 'west').toLowerCase();
+  // the overview links back to the water map; a state links back to the overview
+  const nav = document.getElementById('navWest');
+  if (id === 'west' || !REG[id]) { nav.href = '../'; nav.innerHTML = '&#9666; Water map'; } else { nav.href = '?s=west'; nav.innerHTML = '&#9666; All states'; }
+  const files = (REG[id] || REG.west).concat(['../west/js/terrain.js', '../west/js/app.js']);
+  const V = '4';
   (function next(i) { if (i >= files.length) return; const s = document.createElement('script'); s.src = files[i] + '?v=' + V; s.onload = () => next(i + 1); s.onerror = () => { document.getElementById('loading').textContent = 'Could not load the map.'; }; document.body.appendChild(s); })(0);
 })();
 </script>
