@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
-<link rel="stylesheet" href="../west/west.css?v=4">
+<link rel="stylesheet" href="../west/west.css?v=5">
 <link rel="stylesheet" href="power.css?v=1">
 </head>
 <body>
@@ -75,7 +75,7 @@
   const nav = document.getElementById('navWest');
   if (id === 'west' || !REG[id]) { nav.href = '../'; nav.innerHTML = '&#9666; Water map'; } else { nav.href = '?s=west'; nav.innerHTML = '&#9666; All states'; }
   const files = (REG[id] || REG.west).concat(['../west/js/terrain.js', '../west/js/app.js']);
-  const V = '4';
+  const V = '5';
   (function next(i) { if (i >= files.length) return; const s = document.createElement('script'); s.src = files[i] + '?v=' + V; s.onload = () => next(i + 1); s.onerror = () => { document.getElementById('loading').textContent = 'Could not load the map.'; }; document.body.appendChild(s); })(0);
 })();
 </script>

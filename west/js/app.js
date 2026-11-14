@@ -493,7 +493,7 @@
     rows.forEach((r, i) => { for (let k = 0; k < counts[i]; k++, n++) drops += `<i class="drop" data-k="${r.id}" style="--c:${r.color}"></i>`; });
     // rows too small for a whole drop get one speck, its area in proportion to a drop
     all.filter(r => r.tiny).forEach(r => { drops += `<i class="drop tiny" data-k="${r.id}" style="--c:${r.color};--s:${Math.sqrt(r.af / per).toFixed(3)}"><b></b></i>`; });
-    let h = `<h2>${B.title}</h2><p class="lede">${B.lede}</p>
+    let h = `<h2>${B.title}</h2><p class="lede">${B.lede}</p>${C.homeTop || ''}
       <div class="seg" role="tablist"><button role="tab" data-mode="sources" class="${budgetMode === 'sources' ? 'on' : ''}">${(B.tabs || [])[0] || 'Where it comes from'}</button><button role="tab" data-mode="uses" class="${budgetMode === 'uses' ? 'on' : ''}">${(B.tabs || [])[1] || 'Where it goes'}</button></div>
       <div class="picto${B.shape ? ' ' + B.shape : ''}" id="picto" role="img" aria-label="${all.map(r => `${r.label}: ${r.tiny ? r.val.replace('&middot;', ',') : r.pct + '%'}`).join('; ')}">${drops}</div>
       <div class="gcap">${B.unitLine || `Each drop = ${fmt(per)} acre-feet a year.`} ${B.afNote}</div>
