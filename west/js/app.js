@@ -496,8 +496,9 @@
     let h = `<h2>${B.title}</h2><p class="lede">${B.lede}</p>${C.homeTop || ''}
       <div class="seg" role="tablist"><button role="tab" data-mode="sources" class="${budgetMode === 'sources' ? 'on' : ''}">${(B.tabs || [])[0] || 'Where it comes from'}</button><button role="tab" data-mode="uses" class="${budgetMode === 'uses' ? 'on' : ''}">${(B.tabs || [])[1] || 'Where it goes'}</button></div>
       <div class="picto${B.shape ? ' ' + B.shape : ''}" id="picto" role="img" aria-label="${all.map(r => `${r.label}: ${r.tiny ? r.val.replace('&middot;', ',') : r.pct + '%'}`).join('; ')}">${drops}</div>
-      <div class="gcap">${B.unitLine || `Each drop = ${fmt(per)} acre-feet a year.`} ${B.afNote}</div>
+      <div class="gcap">${B.unitLine || `Each drop = ${fmt(per)} acre-feet a year.`}${B.notesBelow ? '' : ' ' + B.afNote}</div>
       <div id="keys">${all.map(r => `<button class="keyrow${r.tiny ? ' sub' : ''}" data-k="${r.id}" data-layer="${r.layer || ''}" data-feat="${r.feat || ''}" style="--c:${r.color}"><i></i><b>${r.label}</b><span>${r.tiny ? r.val : B.fmtVal ? B.fmtVal(r) : `${r.pct}% &middot; ${(r.af / 1e6).toFixed(1)}M AF`}</span></button><div class="gcap" style="margin:0 0 6px 24px">${r.note}</div>`).join('')}</div>
+      ${B.notesBelow && B.afNote ? `<div class="gcap units">${B.afNote}</div>` : ''}
       ${B.body}
       <h3>Explore</h3><p style="font-size:13.5px">${C.exploreHint || 'Drag to pan, scroll or pinch to zoom, and click anything: a dam, a field, a canal, or bare desert.'}</p>`;
     if (C.statesNav) h += `<h3>${C.statesNav.title}</h3><div class="chips">${C.statesNav.items.map(s => s[2] ? `<button class="chip go" data-go="${s[0]}">${esc(s[1])} &rarr;</button>` : `<button class="chip" disabled>${esc(s[1])} (soon)</button>`).join('')}</div>`;
@@ -648,7 +649,7 @@
 
   // ------------------------------------------------------------------ boot
   if (C.meta) { document.title = C.meta.title; $('#hud h1').textContent = C.meta.h1; $('#hud .title p').textContent = C.meta.tagline; cv.setAttribute('aria-label', C.meta.aria); $('#zhome').title = C.meta.home; $('#zhome').setAttribute('aria-label', C.meta.home); }
-  if (D.region !== 'west') $('#navWest').hidden = false;
+  if ($('#navWest') && D.region !== 'west') $('#navWest').hidden = false;
   $('#hudstats').innerHTML = C.hud.map(s => `<div><b>${s[0]}</b><span>${s[1]}</span></div>`).join('');
   resize();
   setTimeout(() => {
@@ -659,6 +660,9 @@
     }
     resize();
     showHome(); updateLegend(); $('#loading').remove();
+    // arriving from the other map of the same place (#v=x,y,zoom): keep the same view
+    const kv = /[#&]v=(-?[\d.]+),(-?[\d.]+),([\d.]+)/.exec(location.hash);
+    if (kv) { cam.x = +kv[1]; cam.y = +kv[2]; cam.z = +kv[3]; userMoved = true; clampCam(); dirty = true; }
     requestAnimationFrame(loop);
     window.AZMAP = { cam, flyTo, featById, showFeature, setLayer, setSeason, tourGo, G, select, hit };
   }, 30);

@@ -96,10 +96,8 @@
       { id: 'nuclear', label: 'Nuclear, in California', pct: 6.6, af: 17.58 * TWH, color: '#6250d6', layer: 'plants', feat: 'diablo', note: 'All from one plant, Diablo Canyon.' },
       { id: 'wind', label: 'Wind, in California', pct: 5.7, af: 15.17 * TWH, color: '#5fd0d8', layer: 'plants', feat: 'alta', note: 'Mostly from three mountain passes and the hills of Solano County.' },
       { id: 'geo', label: 'Geothermal, in California', pct: 4.1, af: 10.91 * TWH, color: '#c8442e', layer: 'plants', feat: 'geysers', note: 'From The Geysers north of San Francisco, the Salton Sea and Imperial Valley, and the Coso field.' },
-      { id: 'bio', label: 'Biomass, in California', pct: 1.6, af: 4.23 * TWH, color: '#3f8f46', layer: 'plants', note: 'Wood waste, landfill gas and farm waste.' },
-      { id: 'other', tiny: true, label: 'Coal, oil and waste heat, in California', af: 0.43 * TWH, color: '#5c5a66', val: '0.2% &middot; 0.4 TWh', layer: 'plants', feat: 'argus', note: 'One plant at Trona burns coal (0.24 TWh).' },
-      { id: 'impsw', label: 'Imported from the Southwest', pct: 15.7, af: 42.01 * TWH, color: '#eb6834', layer: 'lines', feat: 'devers', note: 'From Arizona, Nevada, Utah, New Mexico and beyond: solar 9.9 TWh, wind 8.6, nuclear 8.5, gas 6.9, coal 4.3, geothermal 2.1, hydro 1.0.' },
-      { id: 'impnw', label: 'Imported from the Northwest', pct: 7.5, af: 19.96 * TWH, color: '#8a5a3a', layer: 'lines', feat: 'coi', note: 'From Oregon, Washington and beyond: wind 9.4 TWh, hydro 4.8, solar 1.1, and 3.4 from sources the sellers did not specify.' },
+      { id: 'other', label: 'Biomass, coal, oil and waste heat, in California', pct: 1.7, af: 4.66 * TWH, color: '#7b8f9b', layer: 'plants', feat: 'argus', note: 'Wood waste, landfill gas and farm waste made 4.2 TWh. One plant at Trona burns coal (0.24 TWh).' },
+      { id: 'imp', label: 'Imported from other states', pct: 23.1, af: 61.97 * TWH, color: '#28c58b', layer: 'lines', feat: 'devers', note: 'From the Southwest (Arizona, Nevada, Utah, New Mexico and beyond), 42.0 TWh: solar 9.9, wind 8.6, nuclear 8.5, gas 6.9, coal 4.3, geothermal 2.1, hydro 1.0. From the Northwest (Oregon, Washington and beyond), 20.0 TWh: wind 9.4, hydro 4.8, solar 1.1, and 3.4 from sources the sellers did not specify.' },
     ],
     uses: [
       { id: 'biz', label: 'Businesses', pct: 42.1, af: 115.13 * TWH, color: '#3f8f46', layer: 'cities', feat: 'datacenters', note: 'Shops, offices, schools, data centers and other commercial customers: 1.78 million of them.' },

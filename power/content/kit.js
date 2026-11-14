@@ -98,6 +98,12 @@ window.POWERKIT = {
     //      meta (optional), kinds (optional extra kinds), sprites (optional extra sprites),
     //      riverLede, tribeLede, exploreHint (optional) }
     K.finish = function (c) {
+      // one colour per thing on every state's chart, tested so each pair stays apart for readers with the three common kinds of colour blindness
+      if (c.budget) {
+        c.budget.notesBelow = true;   // the unit definitions are long: show the chart's key first, then the definitions
+        c.budget.sources.forEach(r => { const k = POWERKIT.ALIAS[r.id] || r.id; if (POWERKIT.FUELCOLOR[k]) r.color = POWERKIT.FUELCOLOR[k]; });
+        c.budget.uses.forEach(r => { const k = POWERKIT.ALIAS[r.id] || r.id; if (POWERKIT.USECOLOR[k]) r.color = POWERKIT.USECOLOR[k]; });
+      }
       window.MAPDATA = Object.assign({}, BASE, {
         region: cfg.id === 'west' ? 'west' : cfg.id + '-power', canals: [],   // 'west' tells the engine this is the overview, with no link back basins: [], golf: [], amaHist: {},
         amas: territories.map(t => ({ n: t.n, k: t.k, r: t.r })),
@@ -209,6 +215,11 @@ window.POWERKIT = {
     };
     return K;
   },
+  // chart colours (where it comes from / where it goes), checked with simulated protan, deutan and tritan vision: every pair that can appear in one chart
+  // is at least 15 apart for normal vision and 8 apart for colour-blind vision (OKLab x 100)
+  FUELCOLOR: { gas: '#f87726', solar: '#e9d32e', coal: '#2c2e34', wind: '#71dafe', hydro: '#0051b5', nuclear: '#c55ae7', geo: '#aa2727', other: '#7b8f9b', imp: '#28c58b' },
+  USECOLOR: { homes: '#e95e0b', biz: '#039b6f', ind: '#014fad', export: '#f9cb3c', loss: '#babcd1', misc: '#1f303b', direct: '#75532a', canada: '#c462bf' },
+  ALIAS: { import: 'imp', impsw: 'imp', impnw: 'imp', bio: 'other', coke: 'other', heat: 'other' },
   // chips in the home panel that switch to another state's electricity map; a state appears once its page exists
   LIVE: ['az', 'ca', 'co', 'id', 'mt', 'nv', 'nm', 'ut'],
   NAMES: { az: 'Arizona', ca: 'California', co: 'Colorado', id: 'Idaho', mt: 'Montana', nv: 'Nevada', nm: 'New Mexico', ut: 'Utah' },
